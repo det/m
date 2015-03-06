@@ -1,94 +1,82 @@
 #pragma once
 #include <chrono>
-#include <cassert>
- 
+
 namespace m
 {
-    //-----------------------------------------------------------------------------
     template<typename Clock>
     class Timer
     {
     public:
         using clock    = Clock;
         using duration = typename clock::duration;
- 
-                 Timer()   noexcept;
- 
-        void     start()   noexcept;
-        void     stop()    noexcept;
-        void     restart() noexcept;
-        void     reset()   noexcept;
 
-        duration elapsed() const noexcept;
+        Timer();
+
+        void     start();
+        void     stop();
+        void     restart();
+        void     reset();
+
+        duration elapsed() const;
         bool     stopped() const noexcept;
- 
+
     private:
-        typename clock::time_point m_Start;
-        duration                   m_Elapsed;
-        bool                       m_Stopped;
+        typename clock::time_point mStart;
+        duration                   mElapsed;
+        bool                       mStopped;
     };
- 
-    //-----------------------------------------------------------------------------
+
     using SystemTimer  = Timer<std::chrono::system_clock>;
     using SteadyTimer  = Timer<std::chrono::steady_clock>;
     using HighResTimer = Timer<std::chrono::high_resolution_clock>;
- 
-    //-----------------------------------------------------------------------------
+
     template<typename Clock>
-    Timer<Clock>::Timer() noexcept
-        : m_Elapsed{duration::zero()}
-        , m_Stopped{true}
+    Timer<Clock>::Timer()
+        : mElapsed{duration::zero()}
+        , mStopped{true}
     {
-    }
- 
-    //-----------------------------------------------------------------------------
-    template<typename Clock>
-    void Timer<Clock>::start() noexcept
-    {
-        assert(m_Stopped);
-        m_Start = clock::now();
-        m_Stopped = false;        
-    }
- 
-    //-----------------------------------------------------------------------------
-    template<typename Clock>
-    void Timer<Clock>::stop() noexcept
-    {
-        assert(!m_Stopped);
-        m_Elapsed += clock::now() - m_Start;
-        m_Stopped = true;
     }
 
-    //-----------------------------------------------------------------------------
     template<typename Clock>
-    void Timer<Clock>::restart() noexcept
+    void Timer<Clock>::start()
     {
-        m_Start = clock::now();
-        m_Elapsed = duration::zero();
-        m_Stopped = false;
+        mStart   = clock::now();
+        mStopped = false;
     }
- 
-    //-----------------------------------------------------------------------------
+
     template<typename Clock>
-    void Timer<Clock>::reset() noexcept
+    void Timer<Clock>::stop()
     {
-        m_Elapsed = duration::zero();
-        m_Stopped = true;
+        mElapsed += clock::now() - mStart;
+        mStopped = true;
     }
- 
-    //-----------------------------------------------------------------------------
+
     template<typename Clock>
-    typename Timer<Clock>::duration Timer<Clock>::elapsed() const noexcept
+    void Timer<Clock>::restart()
     {
-        if(m_Stopped)
-            return m_Elapsed;
-        return m_Elapsed + clock::now() - m_Start;
+        mStart   = clock::now();
+        mElapsed = duration::zero();
+        mStopped = false;
     }
- 
-    //-----------------------------------------------------------------------------
+
+    template<typename Clock>
+    void Timer<Clock>::reset()
+    {
+        mElapsed = duration::zero();
+        mStopped = true;
+    }
+
+    template<typename Clock>
+    typename Timer<Clock>::duration Timer<Clock>::elapsed() const
+    {
+        if(mStopped)
+            return mElapsed;
+        return mElapsed + clock::now() - mStart;
+    }
+
     template<typename Clock>
     bool Timer<Clock>::stopped() const noexcept
     {
-        return m_Stopped;
+        return mStopped;
     }
 }
