@@ -3,7 +3,7 @@
 
 namespace m
 {
-    template<typename Clock>
+    template<class Clock>
     class Timer
     {
     public:
@@ -30,28 +30,28 @@ namespace m
     using SteadyTimer  = Timer<std::chrono::steady_clock>;
     using HighResTimer = Timer<std::chrono::high_resolution_clock>;
 
-    template<typename Clock>
+    template<class Clock>
     Timer<Clock>::Timer()
         : mElapsed{duration::zero()}
         , mStopped{true}
     {
     }
 
-    template<typename Clock>
+    template<class Clock>
     void Timer<Clock>::start()
     {
         mStart   = clock::now();
         mStopped = false;
     }
 
-    template<typename Clock>
+    template<class Clock>
     void Timer<Clock>::stop()
     {
         mElapsed += clock::now() - mStart;
         mStopped = true;
     }
 
-    template<typename Clock>
+    template<class Clock>
     void Timer<Clock>::restart()
     {
         mStart   = clock::now();
@@ -59,14 +59,14 @@ namespace m
         mStopped = false;
     }
 
-    template<typename Clock>
+    template<class Clock>
     void Timer<Clock>::reset()
     {
         mElapsed = duration::zero();
         mStopped = true;
     }
 
-    template<typename Clock>
+    template<class Clock>
     typename Timer<Clock>::duration Timer<Clock>::elapsed() const
     {
         if(mStopped)
@@ -74,7 +74,7 @@ namespace m
         return mElapsed + clock::now() - mStart;
     }
 
-    template<typename Clock>
+    template<class Clock>
     bool Timer<Clock>::stopped() const noexcept
     {
         return mStopped;
