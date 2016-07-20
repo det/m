@@ -7,9 +7,11 @@ namespace m {
     public:
         using native_handle_type = std::condition_variable::native_handle_type;
 
-        explicit   Semaphore(size_t count = 0);
-                   Semaphore(const Semaphore&) = delete;
+        explicit Semaphore(size_t count = 0);
+        Semaphore(const Semaphore&) = delete;
+        Semaphore(Semaphore&&) = delete;
         Semaphore& operator=(const Semaphore&) = delete;
+        Semaphore& operator=(Semaphore&&) = delete;
 
         void notify();
         void wait();
@@ -22,7 +24,7 @@ namespace m {
         native_handle_type native_handle();
 
     private:
-        size_t                  mCount;
+        size_t                  mCount = 0;
         std::mutex              mMutex;
         std::condition_variable mCv;
     };

@@ -11,8 +11,8 @@ namespace m {
 
         MessageChannel() = default;
         MessageChannel(const MessageChannel&) = delete;
-        MessageChannel& operator=(const MessageChannel&) = delete;
         MessageChannel(MessageChannel&&) = default;
+        MessageChannel& operator=(const MessageChannel&) = delete;
         MessageChannel& operator=(MessageChannel&&) = default;
 
         template<typename MessageType, typename MessageHandler>
@@ -27,23 +27,23 @@ namespace m {
         struct ReceiverDeleter;
         using ReceiverMap = std::unordered_multimap<std::type_index, ReceiverBase*>;
 
-        std::shared_ptr<ReceiverMap> mReceivers;
+        std::shared_ptr<ReceiverMap> mReceivers = std::make_shared<ReceiverMap>();
     };
 
     class MessageChannel::Subscription {
     public:
         Subscription(const Subscription&) = delete;
-        Subscription& operator=(const Subscription&) = delete;
         Subscription(Subscription&&) = default;
+        Subscription& operator=(const Subscription&) = delete;
         Subscription& operator=(Subscription&&) = default;
 
-        void unsubscribe() { mReceiver.reset(); }
+        void unsubscribe(); { mReceiver.reset(); }
 
     private:
+        friend MessageChannel;
         Subscription(std::shared_ptr<ReceiverBase> r) : mReceiver{std::move(r)} {}
 
-        std::shared_ptr<ReceiverBase> mReceiver = std::make_shared<ReceiverMap>();
-        friend MessageChannel;
+        std::shared_ptr<ReceiverBase> mReceiver;
     };
 
     template<typename MessageType>
