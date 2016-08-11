@@ -16,7 +16,7 @@ namespace m {
         T current() const noexcept;
         const T& initial() const noexcept;
         const T& target() const noexcept;
-        const typename Clock::duration& duration() const;
+        const typename Clock::duration& duration() const noexcept;
 
     private:
         T                          mInitial;
