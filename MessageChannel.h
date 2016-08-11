@@ -15,15 +15,15 @@ namespace m {
         MessageChannel& operator=(const MessageChannel&) = delete;
         MessageChannel& operator=(MessageChannel&&) = default;
 
-        template<typename MessageType, typename MessageHandler>
+        template <typename MessageType, typename MessageHandler>
         Subscription subscribe(MessageHandler&& handler);
 
-        template<typename MessageType>
+        template <typename MessageType>
         void publish(const MessageType& message);
 
     private:
         struct ReceiverBase {};
-        template<typename MessageType> struct Receiver;
+        template <typename MessageType> struct Receiver;
         struct ReceiverDeleter;
         using ReceiverMap = std::unordered_multimap<std::type_index, ReceiverBase*>;
 
@@ -46,7 +46,7 @@ namespace m {
         std::shared_ptr<ReceiverBase> mReceiver;
     };
 
-    template<typename MessageType>
+    template <typename MessageType>
     struct MessageChannel::Receiver : public MessageChannel::ReceiverBase {
         Receiver(std::function<void(const MessageType&)> h) : handler(std::move(h)) {}
         std::function<void(const MessageType&)> handler;
@@ -55,7 +55,7 @@ namespace m {
     struct MessageChannel::ReceiverDeleter {
         ReceiverDeleter(std::weak_ptr<ReceiverMap> subscriptions) : subscriptions(std::move(subscriptions)) {}
 
-        template<typename MessageType>
+        template <typename MessageType>
         void operator()(Receiver<MessageType>* receiver) {
             auto map = subscriptions.lock();
             if(map) map->erase(iterator);
@@ -66,14 +66,14 @@ namespace m {
         ReceiverMap::const_iterator iterator;
     };
 
-    template<typename MessageType, typename MessageHandler>
+    template <typename MessageType, typename MessageHandler>
     MessageChannel::Subscription MessageChannel::subscribe(MessageHandler&& handler) {
         auto receiver = std::shared_ptr<ReceiverBase>{new Receiver<MessageType>{std::forward<MessageHandler>(handler)}, ReceiverDeleter{mReceivers}};
         std::get_deleter<ReceiverDeleter>(receiver)->iterator = mReceivers->emplace(std::type_index{typeid(MessageType)}, receiver.get());
         return Subscription{std::move(receiver)};
     }
 
-    template<typename MessageType>
+    template <typename MessageType>
     void MessageChannel::publish(const MessageType& message) {
         const auto range = mReceivers->equal_range(std::type_index{typeid(MessageType)});
 
