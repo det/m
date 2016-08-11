@@ -5,8 +5,9 @@ namespace m {
     template<typename Clock>
     class Timer {
     public:
-        using clock    = Clock;
-        using duration = typename clock::duration;
+        using clock      = Clock;
+        using duration   = typename clock::duration;
+        using time_point = typename clock::time_point;
 
         void     start() noexcept;
         void     stop() noexcept;
@@ -17,9 +18,9 @@ namespace m {
         bool     stopped() const noexcept;
 
     private:
-        typename clock::time_point mStart;
-        duration                   mElapsed = duration::zero();
-        bool                       mStopped = true;
+        time_point mStart;
+        duration   mElapsed = duration::zero();
+        bool       mStopped = true;
     };
 
     using SystemTimer  = Timer<std::chrono::system_clock>;
