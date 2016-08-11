@@ -8,14 +8,14 @@ namespace m {
     public:
         using Interpolator = T(*)(const T&, const T&, double);
 
-        explicit Animator(T initial = T{});
+        explicit Animator(T initial = T{}) noexcept;
 
-        void target(T target, typename Clock::duration duration, Interpolator interpolator = Linear<T>);
-        void reset(T value);
+        void target(T target, typename Clock::duration duration, Interpolator interpolator = Linear<T>) noexcept;
+        void reset(T value) noexcept;
 
-        T current() const;
-        const T& initial() const;
-        const T& target() const;
+        T current() const noexcept;
+        const T& initial() const noexcept;
+        const T& target() const noexcept;
         const typename Clock::duration& duration() const;
 
     private:
@@ -27,13 +27,13 @@ namespace m {
     };
 
     template <typename T, typename Clock>
-    Animator<T, Clock>::Animator(T initial)
+    Animator<T, Clock>::Animator(T initial) noexcept
         : mInitial{std::move(initial)}
         , mTarget{mInitial}
     {}
 
     template <typename T, typename Clock>
-    void Animator<T, Clock>::target(T target, typename Clock::duration duration, Interpolator interpolator) {
+    void Animator<T, Clock>::target(T target, typename Clock::duration duration, Interpolator interpolator) noexcept {
         mInitial      = current();
         mTarget       = std::move(target);
         mStart        = Clock::now();
@@ -42,7 +42,7 @@ namespace m {
     }
 
     template <typename T, typename Clock>
-    void Animator<T, Clock>::reset(T value) {
+    void Animator<T, Clock>::reset(T value) noexcept {
         mInitial      = std::move(value);
         mTarget       = mInitial;
         mStart        = {};
@@ -64,17 +64,17 @@ namespace m {
     }
 
     template <typename T, typename Clock>
-    const T& Animator<T, Clock>::initial() const {
+    const T& Animator<T, Clock>::initial() const noexcept {
         return mInitial;
     }
 
     template <typename T, typename Clock>
-    const T& Animator<T, Clock>::target() const {
+    const T& Animator<T, Clock>::target() const  noexcept {
         return mTarget;
     }
 
     template <typename T, typename Clock>
-    const Animator<T, Clock>::duration& Animator<T, Clock>::duration() const {
+    const Animator<T, Clock>::duration& Animator<T, Clock>::duration() const noexcept {
         return mDuration;
     }
 }

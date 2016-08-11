@@ -11,9 +11,7 @@ namespace m {
 
         MessageChannel() = default;
         MessageChannel(const MessageChannel&) = delete;
-        MessageChannel(MessageChannel&&) = default;
         MessageChannel& operator=(const MessageChannel&) = delete;
-        MessageChannel& operator=(MessageChannel&&) = default;
 
         template <typename MessageType, typename MessageHandler>
         Subscription subscribe(MessageHandler&& handler);
@@ -33,9 +31,7 @@ namespace m {
     class MessageChannel::Subscription {
     public:
         Subscription(const Subscription&) = delete;
-        Subscription(Subscription&&) = default;
         Subscription& operator=(const Subscription&) = delete;
-        Subscription& operator=(Subscription&&) = default;
 
         void unsubscribe(); { mReceiver.reset(); }
 

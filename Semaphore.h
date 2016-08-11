@@ -10,9 +10,7 @@ namespace m {
 
         explicit BasicSemaphore(size_t count = 0);
         BasicSemaphore(const BasicSemaphore&) = delete;
-        BasicSemaphore(BasicSemaphore&&) = delete;
         BasicSemaphore& operator=(const BasicSemaphore&) = delete;
-        BasicSemaphore& operator=(BasicSemaphore&&) = delete;
 
         void notify();
         void wait();
