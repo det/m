@@ -30,6 +30,6 @@ namespace m {
     typename std::common_type<std::chrono::time_point<Clock, Duration1>, std::chrono::time_point<Clock, Duration2>>::type
     UniformDistribution(Generator& g, const std::chrono::time_point<Clock, Duration1>& min, const std::chrono::time_point<Clock, Duration2>& max) {
         using CommonType = typename std::common_type<std::chrono::time_point<Clock, Duration1>, std::chrono::time_point<Clock, Duration2>>::type;
-        return CommonType{min} + UniformDistribution(g, CommonType::duration::zero(), CommonType{max} - CommonType{min});
+        return min + UniformDistribution(g, CommonType::duration::zero(), max - min);
     }
 }
