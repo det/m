@@ -10,7 +10,7 @@ namespace m {
     //
     // first, last  -  The input range. PopulationIt must meet the requirements of InputIterator.
     //         out  -  The output iterator where the samples are written. Must not be in the range
-    //                 [first;last). SampleIt must meet the requirements of OutputIterator and
+    //                 [first; last). SampleIt must meet the requirements of OutputIterator and
     //                 RandomAccessIterator.
     //           n  -  The number of samples to make. Must be less than the input range length.
     //           g  -  The random number generator used as the source of randomness.
