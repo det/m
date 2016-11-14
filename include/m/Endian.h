@@ -1,5 +1,6 @@
 #pragma once
 #include <type_traits>
+#include <cstdint>
 
 #if !(__clang__ || __GNUC__)
     #error clang or gcc required for endianness conversions
