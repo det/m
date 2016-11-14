@@ -1,7 +1,7 @@
 #pragma once
 #include <cmath>
 
-// See easings.net and gizma.com/easing for examples/math
+// See easings.net and gizma.com/easing for examples and math
 //
 // b: start value
 // c: change in value
