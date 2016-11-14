@@ -22,8 +22,8 @@ namespace m {
     {
         using DifferenceType = typename std::iterator_traits<SampleIt>::difference_type;
 
-        for (auto i = DifferenceType{0}; i < n; ++i) {
-            out[i] = *(first++);
+        for (auto i = DifferenceType{0}; i < n; ++i, ++first) {
+            out[i] = *first;
         }
 
         for (auto count = n; first != last; ++first, ++count) {
