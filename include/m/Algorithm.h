@@ -22,15 +22,13 @@ namespace m {
     {
         using DifferenceType = typename std::iterator_traits<SampleIt>::difference_type;
 
-        for (auto i = DifferenceType{0}; i < n; ++i, ++first) {
+        for (auto i = DifferenceType{0}; i < n; ++i, ++first)
             out[i] = *first;
-        }
 
         for (auto count = n; first != last; ++first, ++count) {
             auto i = std::uniform_int_distribution<DifferenceType>(0, count)(g);
-            if (i < n) {
+            if (i < n)
                 out[i] = *first;
-            }
         }
 
         return std::next(out, n);
@@ -46,15 +44,13 @@ namespace m {
     {
         using DifferenceType = typename std::iterator_traits<SampleIt>::difference_type;
 
-        for (auto i = DifferenceType{0}; i < n; ++i, ++first) {
+        for (auto i = DifferenceType{0}; i < n; ++i, ++first)
             out[i] = first;
-        }
 
         for (auto count = n; first != last; ++first, ++count) {
             auto i = std::uniform_int_distribution<DifferenceType>(0, count)(g);
-            if (i < n) {
+            if (i < n)
                 out[i] = first;
-            }
         }
 
         return std::next(out, n);
