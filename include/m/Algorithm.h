@@ -35,4 +35,28 @@ namespace m {
 
         return std::next(out, n);
     }
+
+    // The same as UniqueSample except it fills the output range with iterators to elements in the
+    // input range instead of values from the input range.
+    template <typename PopulationIt, typename SampleIt, typename UniformRandomBitGenerator>
+    SampleIt UniqueSampleIterators(PopulationIt first, PopulationIt last,
+                                   SampleIt out,
+                                   typename std::iterator_traits<SampleIt>::difference_type n,
+                                   UniformRandomBitGenerator&& g)
+    {
+        using DifferenceType = typename std::iterator_traits<SampleIt>::difference_type;
+
+        for (auto i = DifferenceType{0}; i < n; ++i, ++first) {
+            out[i] = first;
+        }
+
+        for (auto count = n; first != last; ++first, ++count) {
+            auto i = std::uniform_int_distribution<DifferenceType>(0, count)(g);
+            if (i < n) {
+                out[i] = first;
+            }
+        }
+
+        return std::next(out, n);
+    }
 }
