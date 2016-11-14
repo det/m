@@ -33,7 +33,7 @@ namespace m {
         Subscription(const Subscription&) = delete;
         Subscription& operator=(const Subscription&) = delete;
 
-        void unsubscribe(); { mReceiver.reset(); }
+        void unsubscribe() { mReceiver.reset(); }
 
     private:
         friend MessageChannel;

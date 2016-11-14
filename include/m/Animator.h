@@ -52,6 +52,9 @@ namespace m {
 
     template <typename T, typename Clock>
     T Animator<T, Clock>::current() const {
+        if (!mInterpolator)
+            return mTarget;
+
         auto elapsed = Clock::now() - mStart;
 
         if (elapsed >= mDuration)
