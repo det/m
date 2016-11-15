@@ -5,7 +5,7 @@ namespace m {
     class SpinLock {
     public:
         SpinLock() = default;
-        SpinLock(SpinLock&) = delete;
+        SpinLock(const SpinLock&) = delete;
         SpinLock& operator=(const SpinLock&) = delete;
 
         void lock() noexcept;

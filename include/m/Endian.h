@@ -23,10 +23,6 @@ namespace m {
     constexpr uint64_t SwapByteOrder(uint64_t x) noexcept { return __builtin_bswap64(x); }
     constexpr int64_t  SwapByteOrder(int64_t  x) noexcept { return static_cast<int64_t>(SwapByteOrder(static_cast<uint64_t>(x))); }
 
-    // TODO: strict aliasing rules forbid reinterpret_cast float to int, use a union or memcpy instead
-    //constexpr float    SwapByteOrder(float    x) noexcept { return static_cast<float>(SwapByteOrder(static_cast<uint32_t>(x))); }
-    //constexpr double   SwapByteOrder(double   x) noexcept { return static_cast<double>(SwapByteOrder(static_cast<uint64_t>(x))); }
-
     namespace detail {
         template <typename T>
         constexpr T MaybeSwapByteOrder(T x, std::false_type) noexcept { return x; }
