@@ -25,7 +25,7 @@ namespace m {
         for (auto i = DifferenceType{0}; i < n; ++i, ++first)
             out[i] = *first;
 
-        for (auto count = n; first != last; ++first, ++count) {
+        for (auto count = n; first != last; ++count, ++first) {
             auto i = std::uniform_int_distribution<DifferenceType>(0, count)(g);
             if (i < n)
                 out[i] = *first;
@@ -47,7 +47,7 @@ namespace m {
         for (auto i = DifferenceType{0}; i < n; ++i, ++first)
             out[i] = first;
 
-        for (auto count = n; first != last; ++first, ++count) {
+        for (auto count = n; first != last; ++count, ++first) {
             auto i = std::uniform_int_distribution<DifferenceType>(0, count)(g);
             if (i < n)
                 out[i] = first;
