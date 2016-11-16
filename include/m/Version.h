@@ -12,6 +12,7 @@ namespace m {
 
         static constexpr Version fromInt64(uint64_t i) noexcept;
         static Version           fromString(const char* s) noexcept;
+        static Version           fromString(const std::string& s) noexcept;
 
         constexpr uint64_t       toInt64() const noexcept;
         std::string              toString() const;
@@ -41,6 +42,10 @@ namespace m {
                    &v.revision,
                    &v.build);
         return v;
+    }
+    
+    inline Version Version::fromString(const std::string& s) noexcept {
+        return fromString(s.c_str());
     }
 
     constexpr uint64_t Version::toInt64() const noexcept {
