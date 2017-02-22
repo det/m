@@ -7,7 +7,7 @@
 // c: change in value
 // s: percent complete (0-1)
 namespace m {
-    template <typename T>
+    template <class T>
     constexpr T Linear(const T& b, const T& c, double s) {
         return b + c*s;
     }
@@ -15,34 +15,34 @@ namespace m {
     struct Sine {
         static constexpr auto kPi = 3.1415926535897932385;
 
-        template <typename T>
+        template <class T>
         static T EaseIn(const T& b, const T& c, double s) {
             return -c * cos(s * (kPi/2)) + c + b;
         }
 
-        template <typename T>
+        template <class T>
         static T EaseOut(const T& b, const T& c, double s) {
             return c * sin(s * (kPi/2)) + b;
         }
 
-        template <typename T>
+        template <class T>
         static T EaseInOut(const T& b, const T& c, double s) {
             return -c/2 * (cos(kPi * s) - 1) + b;
         }
     };
 
     struct Quadratic {
-        template <typename T>
+        template <class T>
         static constexpr T EaseIn(const T& b, const T& c, double s) {
             return c*s*s + b;
         }
 
-        template <typename T>
+        template <class T>
         static constexpr T EaseOut(const T& b, const T& c, double s) {
             return -c * s*(s-2) + b;
         }
 
-        template <typename T>
+        template <class T>
         static constexpr T EaseInOut(const T& b, const T& c, double s) {
             s *= 2;
             if (s < 1)
@@ -53,18 +53,18 @@ namespace m {
     };
 
     struct Cubic {
-        template <typename T>
+        template <class T>
         static constexpr T EaseIn(const T& b, const T& c, double s) {
             return c * s*s*s + b;
         }
 
-        template <typename T>
+        template <class T>
         static constexpr T EaseOut(const T& b, const T& c, double s) {
             s -= 1;
             return c * (s*s*s + 1) + b;
         }
 
-        template <typename T>
+        template <class T>
         static constexpr T EaseInOut(const T& b, const T& c, double s) {
             s *= 2;
             if (s < 1)
@@ -75,18 +75,18 @@ namespace m {
     };
 
     struct Quartic {
-        template <typename T>
+        template <class T>
         static constexpr T EaseIn(const T& b, const T& c, double s) {
             return c * s*s*s*s + b;
         }
 
-        template <typename T>
+        template <class T>
         static constexpr T EaseOut(const T& b, const T& c, double s) {
             s -= 1;
             return -c * (s*s*s*s - 1) + b;
         }
 
-        template <typename T>
+        template <class T>
         static constexpr T EaseInOut(const T& b, const T& c, double s) {
             s *= 2;
             if (s < 1)
@@ -97,18 +97,18 @@ namespace m {
     };
 
     struct Quintic {
-        template <typename T>
+        template <class T>
         static constexpr T EaseIn(const T& b, const T& c, double s) {
             return c * s*s*s*s*s + b;
         }
 
-        template <typename T>
+        template <class T>
         static constexpr T EaseOut(const T& b, const T& c, double s) {
             s -= 1;
             return c*(s*s*s*s*s + 1) + b;
         }
 
-        template <typename T>
+        template <class T>
         static constexpr T EaseInOut(const T& b, const T& c, double s) {
             s *= 2;
             if (s < 1)
@@ -119,17 +119,17 @@ namespace m {
     };
 
     struct Exponential {
-        template <typename T>
+        template <class T>
         static T EaseIn(const T& b, const T& c, double s) {
             return c * pow(2, 10 * (s - 1)) + b;
         }
 
-        template <typename T>
+        template <class T>
         static T EaseOut(const T& b, const T& c, double s) {
             return c * (-pow(2, -10 * s) + 1) + b;
         }
 
-        template <typename T>
+        template <class T>
         static T EaseInOut(const T& b, const T& c, double s) {
             s *= 2;
             if (s < 1)
@@ -140,18 +140,18 @@ namespace m {
     };
 
     struct Circular {
-        template <typename T>
+        template <class T>
         static T EaseIn(const T& b, const T& c, double s) {
             return -c * (sqrt(1 - s*s) - 1) + b;
         }
 
-        template <typename T>
+        template <class T>
         static T EaseOut(const T& b, const T& c, double s) {
             s -= 1;
             return c * sqrt(1 - s*s) + b;
         }
 
-        template <typename T>
+        template <class T>
         static T EaseInOut(const T& b, const T& c, double s) {
             s *= 2;
             if (s < 1)
@@ -162,20 +162,20 @@ namespace m {
     };
 
     struct Back {
-        template <typename T>
+        template <class T>
         static constexpr T EaseIn(const T& b, const T& c, double s) {
             constexpr auto f = 1.70158;
             return c * s*s * ((f+1)*s - f) + b;
         }
 
-        template <typename T>
+        template <class T>
         static constexpr T EaseOut(const T& b, const T& c, double s) {
             constexpr auto f = 1.70158;
             s -= 1;
             return c * (s*s * ((f+1)*s + f) + 1) + b;
         }
 
-        template <typename T>
+        template <class T>
         static constexpr T EaseInOut(const T& b, const T& c, double s) {
             constexpr auto f = 1.70158 * 1.525;
             s *= 2;

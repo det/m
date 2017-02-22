@@ -2,7 +2,7 @@
 #include <chrono>
 
 namespace m {
-    template <typename Clock>
+    template <class Clock>
     class Timer {
     public:
         using clock      = Clock;
@@ -27,13 +27,13 @@ namespace m {
     using SteadyTimer  = Timer<std::chrono::steady_clock>;
     using HighResTimer = Timer<std::chrono::high_resolution_clock>;
 
-    template <typename Clock>
+    template <class Clock>
     void Timer<Clock>::start() noexcept {
         mStart   = clock::now();
         mStopped = false;
     }
 
-    template <typename Clock>
+    template <class Clock>
     void Timer<Clock>::stop() noexcept {
         if (!mStopped) {
             mElapsed += clock::now() - mStart;
@@ -41,27 +41,27 @@ namespace m {
         }
     }
 
-    template <typename Clock>
+    template <class Clock>
     void Timer<Clock>::restart() noexcept {
         mStart   = clock::now();
         mElapsed = duration::zero();
         mStopped = false;
     }
 
-    template <typename Clock>
+    template <class Clock>
     void Timer<Clock>::reset() noexcept {
         mElapsed = duration::zero();
         mStopped = true;
     }
 
-    template <typename Clock>
+    template <class Clock>
     typename Timer<Clock>::duration Timer<Clock>::elapsed() const noexcept {
         if (mStopped)
             return mElapsed;
         return mElapsed + clock::now() - mStart;
     }
 
-    template <typename Clock>
+    template <class Clock>
     bool Timer<Clock>::stopped() const noexcept {
         return mStopped;
     }
