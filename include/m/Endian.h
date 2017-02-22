@@ -24,39 +24,39 @@ namespace m {
     constexpr int64_t  SwapByteOrder(int64_t  x) noexcept { return static_cast<int64_t>(SwapByteOrder(static_cast<uint64_t>(x))); }
 
     namespace detail {
-        template <typename T>
+        template <class T>
         constexpr T MaybeSwapByteOrder(T x, std::false_type) noexcept { return x; }
 
-        template <typename T>
+        template <class T>
         constexpr T MaybeSwapByteOrder(T x, std::true_type) noexcept { return SwapByteOrder(x); }
     }
 
-    template <typename T>
+    template <class T>
     constexpr T NativeToLittleEndian(T x) noexcept {
         return detail::MaybeSwapByteOrder(x, std::integral_constant<bool, Endian::kNative != Endian::kLittle>{});
     }
 
-    template <typename T>
+    template <class T>
     constexpr T NativeToBigEndian(T x) noexcept {
         return detail::MaybeSwapByteOrder(x, std::integral_constant<bool, Endian::kNative != Endian::kBig>{});
     }
 
-    template <typename T>
+    template <class T>
     constexpr T LittleToNativeEndian(T x) noexcept {
         return detail::MaybeSwapByteOrder(x, std::integral_constant<bool, Endian::kLittle != Endian::kNative>{});
     }
 
-    template <typename T>
+    template <class T>
     constexpr T BigToNativeEndian(T x) noexcept {
         return detail::MaybeSwapByteOrder(x, std::integral_constant<bool, Endian::kBig != Endian::kNative>{});
     }
 
-    template <typename T>
+    template <class T>
     constexpr T BigToLittleEndian(T x) noexcept {
         return SwapByteOrder(x);
     }
 
-    template <typename T>
+    template <class T>
     constexpr T LittleToBigEndian(T x) noexcept {
         return SwapByteOrder(x);
     }
