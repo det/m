@@ -31,10 +31,10 @@ namespace m {
     #if __clang__ || __GNUC__
         return __builtin_bswap32(x);
     #else
-        return ((x >> 24) & 0xffu) |
-               ((x << 8)  & 0xff0000u) |
-               ((x >> 8)  & 0xff00u) |
-               ((x << 24) & 0xff000000u);
+        return ((x << 24) & 0xff000000u) |
+               ((x << 8)  & 0x00ff0000u) |
+               ((x >> 8)  & 0x0000ff00u) |
+               ((x >> 24) & 0x000000ffu);
     #endif
     }
 
@@ -46,14 +46,14 @@ namespace m {
     #if __clang__ || __GNUC__
         return __builtin_bswap64(x);
     #else
-        return (x  << 56) |
-               ((x << 40) & 0xff000000000000ull) |
-               ((x << 24) & 0xff0000000000ull) |
-               ((x << 8)  & 0xff00000000ull) |
-               ((x >> 8)  & 0xff000000ull) |
-               ((x >> 24) & 0xff0000ull) |
-               ((x >> 40) & 0xff00ull) |
-               (x  >> 56);
+        return ((x << 56) & 0xff00000000000000u) |
+               ((x << 40) & 0x00ff000000000000u) |
+               ((x << 24) & 0x0000ff0000000000u) |
+               ((x << 8)  & 0x000000ff00000000u) |
+               ((x >> 8)  & 0x00000000ff000000u) |
+               ((x >> 24) & 0x0000000000ff0000u) |
+               ((x >> 40) & 0x000000000000ff00u) |
+               ((x >> 56) & 0x00000000000000ffu);
     #endif
     }
 
