@@ -12,8 +12,8 @@ namespace m {
         template <class, size_t N, class = std::make_index_sequence<N>, class = void>
         struct CanCall : std::false_type {};
 
-        template <class F, size_t N, size_t... Idx>
-        struct CanCall<F, N, std::index_sequence<Idx...>, std::void_t<decltype(std::declval<F>()((Idx, std::declval<Any const&&>())...))>> : std::true_type {};
+        template <class F, size_t N, size_t... I>
+        struct CanCall<F, N, std::index_sequence<I...>, std::void_t<decltype(std::declval<F>()((I, std::declval<const Any&&>())...))>> : std::true_type {};
     }
 
     template <class F, size_t N = 0u, class = void>
