@@ -2,8 +2,7 @@
 #include <fstream>
 
 namespace m {
-    // Returns a string buffer with the contents of an entire file. Throws std::ios_base::failure
-    // on i/o failures.
+    // Returns a string with the contents of an entire file. May throw std::ios_base::failure.
     inline std::string ReadFile(const char* filename) {
         auto file = std::ifstream{};
         file.exceptions(std::ios_base::badbit | std::ios_base::failbit);
