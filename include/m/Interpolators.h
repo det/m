@@ -13,21 +13,21 @@ namespace m {
     }
 
     struct Sine {
-        static constexpr auto kPi = 3.1415926535897932385;
+        static constexpr auto pi = 3.1415926535897932385;
 
         template <class T>
         static T EaseIn(const T& b, const T& c, double s) {
-            return -c * cos(s * (kPi/2)) + c + b;
+            return -c * cos(s * (pi/2)) + c + b;
         }
 
         template <class T>
         static T EaseOut(const T& b, const T& c, double s) {
-            return c * sin(s * (kPi/2)) + b;
+            return c * sin(s * (pi/2)) + b;
         }
 
         template <class T>
         static T EaseInOut(const T& b, const T& c, double s) {
-            return -c/2 * (cos(kPi * s) - 1) + b;
+            return -c/2 * (cos(pi * s) - 1) + b;
         }
     };
 
