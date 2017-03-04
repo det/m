@@ -1,5 +1,6 @@
 #pragma once
 #include <iterator>
+#include <initializer_list>
 
 /*
     for (auto& i : m::reversed({1, 2, 3, 4}))
