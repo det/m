@@ -33,7 +33,7 @@ namespace m {
     template <class Future, class Callback>
     void Continuator::then(Future f, Callback c) {
         auto wrapper = [this, f = std::move(f), c = std::move(c)]() mutable {
-            if (f.wait_for(0s) == std::future_status::ready) {
+            if (f.wait_for(std::chrono::seconds{0}) == std::future_status::ready) {
                 call(c, std::move(f));
                 return true;
             }

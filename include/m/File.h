@@ -11,7 +11,7 @@ namespace m {
         auto length = file.tellg();
         auto buffer = std::string(static_cast<std::string::size_type>(length), ' ');
         file.seekg(0, std::ios::beg);
-        file.read(&buffer.front(), length);
+        file.read(&buffer.front(), static_cast<std::streamsize>(length));
 
         return buffer;
     }

@@ -31,7 +31,9 @@ namespace m {
     class MessageChannel::Subscription {
     public:
         Subscription(const Subscription&) = delete;
+        Subscription(Subscription&&) = default;
         Subscription& operator=(const Subscription&) = delete;
+        Subscription& operator=(Subscription&&) = default;
 
         void unsubscribe() { mReceiver.reset(); }
 
@@ -49,7 +51,7 @@ namespace m {
     };
 
     struct MessageChannel::ReceiverDeleter {
-        ReceiverDeleter(std::weak_ptr<ReceiverMap> subscriptions) : subscriptions(std::move(subscriptions)) {}
+        ReceiverDeleter(std::weak_ptr<ReceiverMap> subs) : subscriptions(std::move(subs)) {}
 
         template <typename MessageType>
         void operator()(Receiver<MessageType>* receiver) {
