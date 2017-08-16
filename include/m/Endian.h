@@ -61,36 +61,28 @@ namespace m {
         return static_cast<int64_t>(SwapByteOrder(static_cast<uint64_t>(x)));
     }
 
-    namespace detail {
-        template <class T>
-        constexpr T MaybeSwapByteOrder(T x, std::false_type) noexcept { return x; }
-
-        template <class T>
-        constexpr T MaybeSwapByteOrder(T x, std::true_type) noexcept { return SwapByteOrder(x); }
-    }
-
     template <class T>
     constexpr T NativeToLittleEndian(T x) noexcept {
         static_assert(std::is_integral<T>::value && sizeof(x) > 1, "argument must be a multibyte integer");
-        return detail::MaybeSwapByteOrder(x, std::integral_constant<bool, Endian::native != Endian::little>{});
+        return Endian::native != Endian::little ? SwapByteOrder(x) : x;
     }
 
     template <class T>
     constexpr T NativeToBigEndian(T x) noexcept {
         static_assert(std::is_integral<T>::value && sizeof(x) > 1, "argument must be a multibyte integer");
-        return detail::MaybeSwapByteOrder(x, std::integral_constant<bool, Endian::native != Endian::big>{});
+        return Endian::native != Endian::big ? SwapByteOrder(x) : x;
     }
 
     template <class T>
     constexpr T LittleToNativeEndian(T x) noexcept {
         static_assert(std::is_integral<T>::value && sizeof(x) > 1, "argument must be a multibyte integer");
-        return detail::MaybeSwapByteOrder(x, std::integral_constant<bool, Endian::little != Endian::native>{});
+        return Endian::little != Endian::native ? SwapByteOrder(x) : x;
     }
 
     template <class T>
     constexpr T BigToNativeEndian(T x) noexcept {
         static_assert(std::is_integral<T>::value && sizeof(x) > 1, "argument must be a multibyte integer");
-        return detail::MaybeSwapByteOrder(x, std::integral_constant<bool, Endian::big != Endian::native>{});
+        return Endian::big != Endian::native ? SwapByteOrder(x) : x;
     }
 
     template <class T>
