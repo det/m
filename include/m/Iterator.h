@@ -2,16 +2,13 @@
 #include <iterator>
 #include <initializer_list>
 
-/*
-    for (auto& i : m::reversed({1, 2, 3, 4}))
-        i = 4..3..2..1
-
-    for (auto i : m::enumerate({2, 4, 6, 8})) {
-        i.index = 0..1..2..3
-        i.element = 2..4..6..8
-    }
-*/
-
+//  for (auto& i : m::reversed({1, 2, 3, 4}))
+//      i = 4..3..2..1
+//
+//  for (auto i : m::enumerate({2, 4, 6, 8})) {
+//      i.index = 0..1..2..3
+//      i.element = 2..4..6..8
+//  }
 namespace m {
     namespace detail {
         template <class Iterable>

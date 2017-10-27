@@ -1,11 +1,11 @@
 #pragma once
 #include <cmath>
 
-// See easings.net and gizma.com/easing for examples and math
+//  See easings.net and gizma.com/easing for examples and math
 //
-// b: start value
-// c: change in value
-// s: percent complete (0-1)
+//  b: start value
+//  c: change in value
+//  s: percent complete (0-1)
 namespace m {
     template <class T>
     constexpr T Linear(const T& b, const T& c, double s) {
