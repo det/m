@@ -6,7 +6,9 @@ namespace m {
     public:
         SpinLock() = default;
         SpinLock(const SpinLock&) = delete;
+        SpinLock(SpinLock&&) = delete;
         SpinLock& operator=(const SpinLock&) = delete;
+        SpinLock& operator=(SpinLock&&) = delete;
 
         void lock() noexcept;
         bool try_lock() noexcept;

@@ -11,7 +11,9 @@ namespace m {
 
         explicit BasicSemaphore(size_t count = 0);
         BasicSemaphore(const BasicSemaphore&) = delete;
+        BasicSemaphore(BasicSemaphore&&) = delete;
         BasicSemaphore& operator=(const BasicSemaphore&) = delete;
+        BasicSemaphore& operator=(BasicSemaphore&&) = delete;
 
         void notify();
         void wait();
@@ -82,10 +84,5 @@ namespace m {
             --mCount;
 
         return finished;
-    }
-
-    template <typename Mutex, typename CondVar>
-    typename BasicSemaphore<Mutex, CondVar>::native_handle_type BasicSemaphore<Mutex, CondVar>::native_handle() {
-        return mCv.native_handle();
     }
 }

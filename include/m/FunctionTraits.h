@@ -13,18 +13,25 @@ namespace m {
         struct CanCall : std::false_type {};
 
         template <class F, size_t N, size_t... I>
-        struct CanCall<F, N, std::index_sequence<I...>, std::void_t<decltype(std::declval<F>()((I, std::declval<const Any&&>())...))>> : std::true_type {};
+        struct CanCall<F, N, std::index_sequence<I...>, std::void_t<decltype(std::declval<F>()((static_cast<void>(I), std::declval<const Any&&>())...))>> : std::true_type {};
+        
+        template <class F, size_t N = 0u, class = void>
+        struct arity : arity<F, N + 1u, void> {};
+        
+        template <class F, size_t N>
+        struct arity<F, N, std::enable_if_t<detail::CanCall<F, N>::value>> : std::integral_constant<size_t, N> {};
+        
+        template <class F>
+        struct arity<F, 64, void> : std::integral_constant<size_t, 64> {};
     }
 
-    template <class F, size_t N = 0u, class = void>
-    struct arity : arity<F, N + 1u, void> {};
-
-    template <class F, size_t N>
-    struct arity<F, N, std::enable_if_t<detail::CanCall<F, N>::value>> : std::integral_constant<size_t, N> {};
-
+    // The number of arguments a function takes (up to 64).
     template <class F>
-    struct arity<F, 64, void> : std::integral_constant<size_t, 64> {};
-
+    constexpr size_t arity = detail::arity<F>::value;
+    
+    // Whether the arity of a function is zero (function takes no arguments).
+    // This will compile faster than calling arity<F> == 0, and it compiles with
+    // lambdas which take auto arguments.
     template <class F>
-    constexpr auto arity_v = arity<F>::value;
+    constexpr bool arity_zero = detail::CanCall<F, 0>::value == 0;
 }
