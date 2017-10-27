@@ -33,5 +33,5 @@ namespace m {
     // This will compile faster than calling arity<F> == 0, and it compiles with
     // lambdas which take auto arguments.
     template <class F>
-    constexpr bool arity_zero = detail::CanCall<F, 0>::value == 0;
+    constexpr bool arity_zero = detail::CanCall<F, 0>::value;
 }
