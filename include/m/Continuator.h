@@ -16,9 +16,10 @@ namespace m {
         // Register a callback to be called when the cooresponding future is ready. The
         // provided future must be valid (have a shared state).
         template <class Future, class Callback>
-        void then(Future f, Callback c);
+        void then(Future&& f, Callback&& c);
 
-        // Checks for futures which are ready and calls cooresponding callbacks.
+        // Checks for futures which are ready and calls cooresponding callbacks on the
+        // current thread.
         void update();
 
     private:
@@ -26,8 +27,8 @@ namespace m {
     };
 
     template <class Future, class Callback>
-    void Continuator::then(Future f, Callback c) {
-        auto wrapper = [this, f = std::move(f), c = std::move(c)]() mutable {
+    void Continuator::then(Future&& f, Callback&& c) {
+        auto wrapper = [f = std::forward<Future>(f), c = std::forward<Callback>(c)]() mutable {
             if (f.wait_for(std::chrono::seconds{0}) != std::future_status::ready)
                 return false;
             
@@ -43,6 +44,6 @@ namespace m {
     }
 
     inline void Continuator::update() {
-        mCallbacks.remove_if([](const auto& wrapper) { return wrapper(); });
+        mCallbacks.remove_if([](auto& wrapper) { return wrapper(); });
     }
 }
