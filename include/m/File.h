@@ -3,7 +3,7 @@
 
 namespace m {
     // Returns a string with the contents of an entire file. May throw std::ios_base::failure.
-    inline std::string ReadFile(const char* filename) {
+    inline std::string readFile(const char* filename) {
         auto file = std::ifstream{};
         file.exceptions(std::ios_base::badbit | std::ios_base::failbit);
         file.open(filename, std::ifstream::ate | std::ifstream::binary);
@@ -16,5 +16,5 @@ namespace m {
         return buffer;
     }
 
-    inline std::string ReadFile (const std::string& filename) { return ReadFile(filename.c_str()); }
+    inline std::string readFile (const std::string& filename) { return readFile(filename.c_str()); }
 }

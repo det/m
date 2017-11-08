@@ -13,24 +13,24 @@ namespace m {
         native = __BYTE_ORDER__
     };
 
-    constexpr uint16_t SwapByteOrder(uint16_t x) noexcept { return __builtin_bswap16(x); }
-    constexpr int16_t  SwapByteOrder(int16_t x) noexcept  { return static_cast<int16_t>(SwapByteOrder(static_cast<uint16_t>(x))); }
-    constexpr uint32_t SwapByteOrder(uint32_t x) noexcept { return __builtin_bswap32(x); }
-    constexpr int32_t  SwapByteOrder(int32_t x) noexcept  { return static_cast<int32_t>(SwapByteOrder(static_cast<uint32_t>(x))); }
-    constexpr uint64_t SwapByteOrder(uint64_t x) noexcept { return __builtin_bswap64(x); }
-    constexpr int64_t  SwapByteOrder(int64_t x) noexcept  { return static_cast<int64_t>(SwapByteOrder(static_cast<uint64_t>(x))); }
+    constexpr uint16_t swapByteOrder(uint16_t x) noexcept { return __builtin_bswap16(x); }
+    constexpr int16_t  swapByteOrder(int16_t x) noexcept  { return static_cast<int16_t>(swapByteOrder(static_cast<uint16_t>(x))); }
+    constexpr uint32_t swapByteOrder(uint32_t x) noexcept { return __builtin_bswap32(x); }
+    constexpr int32_t  swapByteOrder(int32_t x) noexcept  { return static_cast<int32_t>(swapByteOrder(static_cast<uint32_t>(x))); }
+    constexpr uint64_t swapByteOrder(uint64_t x) noexcept { return __builtin_bswap64(x); }
+    constexpr int64_t  swapByteOrder(int64_t x) noexcept  { return static_cast<int64_t>(swapByteOrder(static_cast<uint64_t>(x))); }
 
 #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-    template <class T> constexpr T NativeToLittleEndian(T x) noexcept { return x; }
-    template <class T> constexpr T NativeToBigEndian(T x) noexcept    { return SwapByteOrder(x); }
-    template <class T> constexpr T LittleToNativeEndian(T x) noexcept { return x; }
-    template <class T> constexpr T BigToNativeEndian(T x) noexcept    { return SwapByteOrder(x); }
+    template <class T> constexpr T nativeToLittleEndian(T x) noexcept { return x; }
+    template <class T> constexpr T nativeToBigEndian(T x) noexcept    { return swapByteOrder(x); }
+    template <class T> constexpr T littleToNativeEndian(T x) noexcept { return x; }
+    template <class T> constexpr T bigToNativeEndian(T x) noexcept    { return swapByteOrder(x); }
 #else
-    template <class T> constexpr T NativeToLittleEndian(T x) noexcept { return SwapByteOrder(x); }
-    template <class T> constexpr T NativeToBigEndian(T x) noexcept    { return x; }
-    template <class T> constexpr T LittleToNativeEndian(T x) noexcept { return SwapByteOrder(x); }
-    template <class T> constexpr T BigToNativeEndian(T x) noexcept    { return x; }
+    template <class T> constexpr T nativeToLittleEndian(T x) noexcept { return swapByteOrder(x); }
+    template <class T> constexpr T nativeToBigEndian(T x) noexcept    { return x; }
+    template <class T> constexpr T littleToNativeEndian(T x) noexcept { return swapByteOrder(x); }
+    template <class T> constexpr T bigToNativeEndian(T x) noexcept    { return x; }
 #endif
-    template <class T> constexpr T LittleToBigEndian(T x) noexcept    { return SwapByteOrder(x); }
-    template <class T> constexpr T BigToLittleEndian(T x) noexcept    { return SwapByteOrder(x); }
+    template <class T> constexpr T littleToBigEndian(T x) noexcept    { return swapByteOrder(x); }
+    template <class T> constexpr T bigToLittleEndian(T x) noexcept    { return swapByteOrder(x); }
 }

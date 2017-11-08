@@ -10,7 +10,7 @@ namespace m {
 
         explicit Animator(T initial = T{}) noexcept;
 
-        void     target(T target, typename Clock::duration duration, Interpolator interpolator = Linear<T>) noexcept;
+        void     target(T target, typename Clock::duration duration, Interpolator interpolator = linear<T>) noexcept;
         void     reset(T value) noexcept;
 
         T        current() const noexcept;

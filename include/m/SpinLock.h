@@ -11,7 +11,7 @@ namespace m {
         SpinLock& operator=(SpinLock&&) = delete;
 
         void lock() noexcept;
-        bool try_lock() noexcept;
+        bool tryLock() noexcept;
         void unlock() noexcept;
 
     private:
@@ -22,7 +22,7 @@ namespace m {
         while (mLocked.test_and_set(std::memory_order_acquire)) {}
     }
 
-    inline bool SpinLock::try_lock() noexcept {
+    inline bool SpinLock::tryLock() noexcept {
         return !mLocked.test_and_set(std::memory_order_acquire);
     }
 

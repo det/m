@@ -43,7 +43,7 @@ namespace m {
                    &v.build);
         return v;
     }
-    
+
     inline Version Version::fromString(const std::string& s) noexcept {
         return fromString(s.c_str());
     }

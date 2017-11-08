@@ -3,69 +3,57 @@
 #include <condition_variable>
 
 namespace m {
-    template <typename Mutex, typename CondVar>
-    class BasicSemaphore {
+    class Semaphore {
     public:
-        using mutex              = Mutex;
-        using condition_variable = CondVar;
-
-        explicit BasicSemaphore(size_t count = 0);
-        BasicSemaphore(const BasicSemaphore&) = delete;
-        BasicSemaphore(BasicSemaphore&&) = delete;
-        BasicSemaphore& operator=(const BasicSemaphore&) = delete;
-        BasicSemaphore& operator=(BasicSemaphore&&) = delete;
+        explicit Semaphore(size_t count = 0);
+        Semaphore(const Semaphore&) = delete;
+        Semaphore(Semaphore&&) = delete;
+        Semaphore& operator=(const Semaphore&) = delete;
+        Semaphore& operator=(Semaphore&&) = delete;
 
         void notify();
         void wait();
-        bool try_wait();
+        bool tryWait();
         template<class Rep, class Period>
-        bool wait_for(const std::chrono::duration<Rep, Period>& d);
+        bool waitFor(const std::chrono::duration<Rep, Period>& d);
         template<class Clock, class Duration>
-        bool wait_until(const std::chrono::time_point<Clock, Duration>& t);
+        bool waitUntil(const std::chrono::time_point<Clock, Duration>& t);
 
     private:
-        mutex              mMutex;
-        condition_variable mCv;
-        size_t             mCount;
+        std::mutex              mMutex;
+        std::condition_variable mCv;
+        size_t                  mCount;
     };
 
-    using Semaphore = BasicSemaphore<std::mutex, std::condition_variable>;
-
-    template <typename Mutex, typename CondVar>
-    BasicSemaphore<Mutex, CondVar>::BasicSemaphore(size_t count)
+    inline Semaphore::Semaphore(size_t count)
         : mCount{count}
     {}
 
-    template <typename Mutex, typename CondVar>
-    void BasicSemaphore<Mutex, CondVar>::notify() {
-        std::lock_guard<mutex> lock{mMutex};
+    inline void Semaphore::notify() {
+        std::lock_guard<std::mutex> lock{mMutex};
         ++mCount;
         mCv.notify_one();
     }
 
-    template <typename Mutex, typename CondVar>
-    void BasicSemaphore<Mutex, CondVar>::wait() {
-        std::unique_lock<mutex> lock{mMutex};
+    inline void Semaphore::wait() {
+        std::unique_lock<std::mutex> lock{mMutex};
         mCv.wait(lock, [&]{ return mCount > 0; });
         --mCount;
     }
 
-    template <typename Mutex, typename CondVar>
-    bool BasicSemaphore<Mutex, CondVar>::try_wait() {
-        std::lock_guard<mutex> lock{mMutex};
+    inline bool Semaphore::tryWait() {
+        std::lock_guard<std::mutex> lock{mMutex};
 
-        if (mCount > 0) {
-            --mCount;
-            return true;
-        }
+        if (mCount == 0)
+            return false;
 
-        return false;
+        --mCount;
+        return true;
     }
 
-    template <typename Mutex, typename CondVar>
     template<class Rep, class Period>
-    bool BasicSemaphore<Mutex, CondVar>::wait_for(const std::chrono::duration<Rep, Period>& d) {
-        std::unique_lock<mutex> lock{mMutex};
+    bool Semaphore::waitFor(const std::chrono::duration<Rep, Period>& d) {
+        std::unique_lock<std::mutex> lock{mMutex};
         auto finished = mCv.wait_for(lock, d, [&]{ return mCount > 0; });
 
         if (finished)
@@ -74,10 +62,9 @@ namespace m {
         return finished;
     }
 
-    template <typename Mutex, typename CondVar>
     template<class Clock, class Duration>
-    bool BasicSemaphore<Mutex, CondVar>::wait_until(const std::chrono::time_point<Clock, Duration>& t) {
-        std::unique_lock<mutex> lock{mMutex};
+    bool Semaphore::waitUntil(const std::chrono::time_point<Clock, Duration>& t) {
+        std::unique_lock<std::mutex> lock{mMutex};
         auto finished = mCv.wait_until(lock, t, [&]{ return mCount > 0; });
 
         if (finished)
