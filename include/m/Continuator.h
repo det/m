@@ -13,12 +13,12 @@ namespace m {
         Continuator& operator=(const Continuator&) = delete;
         Continuator& operator=(Continuator&&) = default;
 
-        // Register a callback to be called when the cooresponding future is ready. The
+        // Register a callback to be called when the corresponding future is ready. The
         // provided future must be valid (have a shared state).
         template <class Future, class Callback>
         void then(Future&& f, Callback&& c);
 
-        // Checks for futures which are ready and calls cooresponding callbacks on the
+        // Checks for futures which are ready and calls corresponding callbacks on the
         // current thread.
         void update();
 
