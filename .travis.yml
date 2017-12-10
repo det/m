@@ -1,0 +1,23 @@
+dist: trusty
+sudo: required
+
+language: cpp
+
+addons:
+  apt:
+    sources:
+      - sourceline: "ppa:ubuntu-toolchain-r/test"
+      - sourceline: "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8"
+        key_url: "https://storage.googleapis.com/bazel-apt/doc/apt-key.pub.gpg"
+    packages:
+      - gcc-7
+      - g++-7
+      - bazel=0.8.1
+
+install:
+  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 90
+  - gcc --version
+
+script:
+  - bazel --batch build ... --cxxopt="-std=c++17" --noshow_progress --noshow_loading_progress --verbose_failures
+  - bazel --batch test ... --cxxopt="-std=c++17" --noshow_progress --noshow_loading_progress --test_output=errors --verbose_failures
