@@ -20,17 +20,13 @@ namespace m {
     constexpr uint64_t swapByteOrder(uint64_t x) noexcept { return __builtin_bswap64(x); }
     constexpr int64_t  swapByteOrder(int64_t x) noexcept  { return static_cast<int64_t>(swapByteOrder(static_cast<uint64_t>(x))); }
 
-#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
-    template <class T> constexpr T nativeToLittleEndian(T x) noexcept { return x; }
-    template <class T> constexpr T nativeToBigEndian(T x) noexcept    { return swapByteOrder(x); }
-    template <class T> constexpr T littleToNativeEndian(T x) noexcept { return x; }
-    template <class T> constexpr T bigToNativeEndian(T x) noexcept    { return swapByteOrder(x); }
-#else
-    template <class T> constexpr T nativeToLittleEndian(T x) noexcept { return swapByteOrder(x); }
-    template <class T> constexpr T nativeToBigEndian(T x) noexcept    { return x; }
-    template <class T> constexpr T littleToNativeEndian(T x) noexcept { return swapByteOrder(x); }
-    template <class T> constexpr T bigToNativeEndian(T x) noexcept    { return x; }
-#endif
+    template <Endian endian, class T> constexpr T nativeToEndian(T x)   { return Endian::native != endian ? swapByteOrder(x) : x; }
+    template <Endian endian, class T> constexpr T nativeFromEndian(T x) { return Endian::native != endian ? swapByteOrder(x) : x; }
+
+    template <class T> constexpr T nativeToLittleEndian(T x) noexcept { return nativeToEndian<Endian::little>(x); }
+    template <class T> constexpr T nativeToBigEndian(T x) noexcept    { return nativeToEndian<Endian::big>(x); }
+    template <class T> constexpr T littleToNativeEndian(T x) noexcept { return nativeFromEndian<Endian::little>(x); }
+    template <class T> constexpr T bigToNativeEndian(T x) noexcept    { return nativeFromEndian<Endian::big>(x); }
     template <class T> constexpr T littleToBigEndian(T x) noexcept    { return swapByteOrder(x); }
     template <class T> constexpr T bigToLittleEndian(T x) noexcept    { return swapByteOrder(x); }
 }
