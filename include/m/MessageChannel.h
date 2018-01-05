@@ -1,8 +1,8 @@
 #pragma once
-#include <memory>
-#include <unordered_map>
 #include <functional>
+#include <memory>
 #include <typeindex>
+#include <unordered_map>
 
 namespace m {
     class MessageChannel {

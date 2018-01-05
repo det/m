@@ -1,8 +1,8 @@
 #pragma once
 #include <m/FunctionTraits.h>
+#include <functional>
 #include <future>
 #include <list>
-#include <functional>
 
 namespace m {
     class Continuator {
@@ -31,10 +31,10 @@ namespace m {
         auto wrapper = [f = std::forward<Future>(f), c = std::forward<Callback>(c)]() mutable {
             if (f.wait_for(std::chrono::seconds{0}) != std::future_status::ready)
                 return false;
-            
+
             if constexpr (arity_zero<Callback>) c();
             else                                c(std::move(f));
-            
+
             return true;
         };
 

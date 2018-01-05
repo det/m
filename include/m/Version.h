@@ -1,7 +1,7 @@
 #pragma once
-#include <string>
-#include <cstdio>
 #include <cinttypes>
+#include <cstdio>
+#include <string>
 
 namespace m {
     struct Version {
