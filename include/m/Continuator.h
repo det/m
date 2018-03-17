@@ -1,5 +1,5 @@
 #pragma once
-#include <m/FunctionTraits.h>
+#include <m/TypeTraits.h>
 #include <functional>
 #include <future>
 #include <list>

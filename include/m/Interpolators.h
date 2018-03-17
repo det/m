@@ -27,7 +27,7 @@ namespace m {
 
         template <class T>
         static T easeInOut(const T& b, const T& c, double s) {
-            return -c/2 * (cos(pi * s) - 1) + b;
+            return -c/2 * (cos(pi*s) - 1) + b;
         }
     };
 

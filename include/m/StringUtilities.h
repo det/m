@@ -1,5 +1,5 @@
 #pragma once
-#include <string_view>
+#include <iterator>
 #include <numeric>
 #include <vector>
 #include <utility>
@@ -27,5 +27,35 @@ namespace m {
         using std::begin;
         using std::end;
         return levenshteinDistance(begin(left), end(left), begin(right), end(right));
+    }
+
+    template <class ForwardIt1, class ForwardIt2>
+    constexpr bool startsWith(ForwardIt1 start, ForwardIt1 last, ForwardIt2 startPrefix, ForwardIt2 lastPrefix) noexcept {
+        for (; start != last && startPrefix != lastPrefix; ++start, ++startPrefix) {
+            if (*start != *startPrefix)
+                return false;
+        }
+
+        return startPrefix == lastPrefix;
+    }
+
+    template <class T1, class T2>
+    constexpr bool startsWith(const T1& s, const T2& prefix) noexcept {
+        using std::begin;
+        using std::end;
+        return startsWith(begin(s), end(s), begin(prefix), end(prefix));
+    }
+
+    template <class BiDirIt1, class BiDirIt2>
+    constexpr bool endsWith(BiDirIt1 start, BiDirIt1 last, BiDirIt2 startSuffix, BiDirIt2 lastSuffix) noexcept {
+        return startsWith(std::reverse_iterator<BiDirIt1>{start}, std::reverse_iterator<BiDirIt1>{last},
+                          std::reverse_iterator<BiDirIt2>{startSuffix}, std::reverse_iterator<BiDirIt2>{lastSuffix});
+    }
+
+    template <class T1, class T2>
+    constexpr bool endsWith(const T1& s, const T2& suffix) noexcept {
+        using std::rbegin;
+        using std::rend;
+        return startsWith(rbegin(s), rend(s), rbegin(suffix), rend(suffix));
     }
 }

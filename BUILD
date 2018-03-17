@@ -2,7 +2,6 @@ cc_library(
     name = "m",
     hdrs = glob(["include/m/*.h"]),
     includes = ["include"],
-    copts = ["-std=c++1z"],
     visibility = ["//visibility:public"]
 )
 

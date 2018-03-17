@@ -63,8 +63,9 @@ namespace m {
     }
 
     inline std::string Version::toShortString() const {
-        if (build)    { return toString(); }
-        if (revision) { return std::to_string(major) + '.' + std::to_string(minor) + '.' + std::to_string(revision); }
-        return std::to_string(major) + '.' + std::to_string(minor);
+        auto ret = std::to_string(major) + '.' + std::to_string(minor);
+        if (revision || build) ret += '.' + std::to_string(revision);
+        if (build)             ret += '.' + std::to_string(build);
+        return ret;
     }
 }
