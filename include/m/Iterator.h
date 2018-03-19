@@ -17,10 +17,10 @@ namespace m {
             template <class T>
             explicit ReversedIterable(T&& iterable) : mIterable{std::forward<T>(iterable)} {}
 
-            auto begin() const { return std::rbegin(mIterable); }
-            auto begin()       { return std::rbegin(mIterable); }
-            auto   end() const { return std::rend(mIterable); }
-            auto   end()       { return std::rend(mIterable); }
+            auto begin() const { using std::rbegin; return rbegin(mIterable); }
+            auto begin()       { using std::rbegin; return rbegin(mIterable); }
+            auto   end() const { using std::rend; return rend(mIterable); }
+            auto   end()       { using std::rend; return rend(mIterable); }
 
         private:
             Iterable mIterable;
@@ -92,10 +92,10 @@ namespace m {
                 , mIndex{index}
             {}
 
-            auto begin() const { return Iterator{std::begin(mIterable), mIndex}; }
-            auto begin()       { return Iterator{std::begin(mIterable), mIndex}; }
-            auto   end() const { return std::end(mIterable); }
-            auto   end()       { return std::end(mIterable); }
+            auto begin() const { using std::begin; return Iterator{begin(mIterable), mIndex}; }
+            auto begin()       { using std::begin; return Iterator{begin(mIterable), mIndex}; }
+            auto   end() const { using std::end; return end(mIterable); }
+            auto   end()       { using std::end; return end(mIterable); }
 
         private:
             Iterable mIterable;

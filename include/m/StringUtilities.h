@@ -15,6 +15,7 @@ namespace m {
             auto diagonal = (*colIt)++;
             for (auto j = start2; j != last2; ++j, ++colIt) {
                 diagonal = std::min({*colIt + 1, colIt[1] + 1, diagonal + (*i != *j)});
+                using std::swap;
                 std::swap(colIt[1], diagonal);
             }
         }
@@ -31,11 +32,7 @@ namespace m {
 
     template <class ForwardIt1, class ForwardIt2>
     constexpr bool startsWith(ForwardIt1 start, ForwardIt1 last, ForwardIt2 startPrefix, ForwardIt2 lastPrefix) noexcept {
-        for (; start != last && startPrefix != lastPrefix; ++start, ++startPrefix) {
-            if (*start != *startPrefix)
-                return false;
-        }
-
+        for (; start != last && startPrefix != lastPrefix && *start == *startPrefix; ++start, ++startPrefix);
         return startPrefix == lastPrefix;
     }
 

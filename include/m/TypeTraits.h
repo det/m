@@ -40,26 +40,44 @@ namespace m {
     struct is_duration : std::false_type {};
 
     template <class Rep, class Period>
-    struct is_duration<std::chrono::duration<Rep, Period>> : std::true_type  {};
+    struct is_duration<std::chrono::duration<Rep, Period>> : std::true_type {};
+
+    template <class Rep, class Period>
+    struct is_duration<const std::chrono::duration<Rep, Period>> : std::true_type {};
+
+    template <class Rep, class Period>
+    struct is_duration<volatile std::chrono::duration<Rep, Period>> : std::true_type {};
+
+    template <class Rep, class Period>
+    struct is_duration<const volatile std::chrono::duration<Rep, Period>> : std::true_type {};
 
     template <class T>
-    constexpr bool is_duration_v = is_duration<std::remove_cv_t<T>>::value;
+    constexpr bool is_duration_v = is_duration<T>::value;
 
     template <class T>
     struct is_time_point : std::false_type {};
 
     template <class Clock, class Duration>
-    struct is_time_point<std::chrono::time_point<Clock, Duration>> : std::true_type  {};
+    struct is_time_point<std::chrono::time_point<Clock, Duration>> : std::true_type {};
+
+    template <class Clock, class Duration>
+    struct is_time_point<const std::chrono::time_point<Clock, Duration>> : std::true_type {};
+
+    template <class Clock, class Duration>
+    struct is_time_point<volatile std::chrono::time_point<Clock, Duration>> : std::true_type {};
+
+    template <class Clock, class Duration>
+    struct is_time_point<const volatile std::chrono::time_point<Clock, Duration>> : std::true_type {};
 
     template <class T>
-    constexpr bool is_time_point_v = is_time_point<std::remove_cv_t<T>>::value;
+    constexpr bool is_time_point_v = is_time_point<T>::value;
 
     template <class T, class = std::void_t<>>
     struct is_iterator : std::false_type {};
 
     template<class T>
-    struct is_iterator<T, std::void_t<typename std::iterator_traits<T>::value_type>> : std::true_type {};
+    struct is_iterator<T, std::void_t<typename std::iterator_traits<std::remove_cv_t<T>>::value_type>> : std::true_type {};
 
     template <class T>
-    constexpr bool is_iterator_v = is_iterator<std::remove_cv_t<T>>::value;
+    constexpr bool is_iterator_v = is_iterator<T>::value;
 }
