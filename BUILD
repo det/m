@@ -2,7 +2,8 @@ cc_library(
     name = "m",
     hdrs = glob(["include/m/*.h"]),
     includes = ["include"],
-    visibility = ["//visibility:public"]
+    visibility = ["//visibility:public"],
+    deps = ["@fmt"]
 )
 
 cc_test(
