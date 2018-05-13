@@ -17,9 +17,6 @@ addons:
 before_install:
   - export CC=clang-6.0 CXX=clang++-6.0
 
-install:
-  - clang --version
-
 script:
-  - bazel --batch build ... --config=ci
-  - bazel --batch test ... --config=ci
+  - bazel build ... --config=ci --verbose_failures
+  - bazel test ... --config=ci --verbose_failures

@@ -1,4 +1,5 @@
 #pragma once
+#include "m/Math.h"
 #include <cmath>
 
 //  See easings.net and gizma.com/easing for examples and math
@@ -13,8 +14,6 @@ namespace m {
     }
 
     struct Sine {
-        static constexpr auto pi = 3.1415926535897932385;
-
         template <class T>
         static T easeIn(const T& b, const T& c, double s) {
             return -c * cos(s * (pi/2)) + c + b;
