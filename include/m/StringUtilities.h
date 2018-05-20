@@ -16,7 +16,7 @@ namespace m {
             for (auto j = start2; j != last2; ++j, ++colIt) {
                 diagonal = std::min({*colIt + 1, colIt[1] + 1, diagonal + (*i != *j)});
                 using std::swap;
-                std::swap(colIt[1], diagonal);
+                swap(colIt[1], diagonal);
             }
         }
 
