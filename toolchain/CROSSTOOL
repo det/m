@@ -1,0 +1,69 @@
+major_version: "1"
+minor_version: "0"
+default_target_cpu: "x86_64" # Legacy, deprecated field, that hlopko@ should finally remove.
+
+default_toolchain {
+    cpu: "x86_64"
+    toolchain_identifier: "ubuntu_x86_64_clang_toolchain"
+}
+
+toolchain {
+    toolchain_identifier: "ubuntu_x86_64_clang_toolchain"
+    host_system_name:     "x86_64-unknown-linux-gnu"
+    target_system_name:   "x86_64-unknown-linux-gnu"
+    target_cpu:           "x86_64"
+    target_libc:          "GLIBC_2.14"
+    compiler:             "clang"
+    abi_version:          "clang6.0"
+    abi_libc_version:     "GLIBC_2.14"
+
+    tool_path { name: "ar"      path: "wrappers/llvm-ar.sh" }
+    tool_path { name: "cpp"     path: "wrappers/clang++.sh" }
+    tool_path { name: "gcc"     path: "wrappers/clang.sh" }
+    tool_path { name: "gcov"    path: "wrappers/llvm-cov.sh" }
+    tool_path { name: "ld"      path: "wrappers/lld.sh" }
+    tool_path { name: "nm"      path: "wrappers/llvm-nm.sh" }
+    tool_path { name: "objcopy" path: "wrappers/llvm-objcopy.sh" }
+    tool_path { name: "objdump" path: "wrappers/llvm-objdump.sh" }
+    tool_path { name: "strip"   path: "/usr/bin/strip" }
+
+    supports_embedded_runtimes: true
+
+    # unfiltered_cxx_flag: "-no-canonical-prefixes"
+    compiler_flag: "-no-canonical-prefixes"
+
+    compiler_flag: "-nostdinc"
+    compiler_flag: "-nostdinc++"
+
+    #compiler_flag: "-stdlib=libc++"
+
+    compiler_flag: "-isystem"
+    compiler_flag: "external/clang/include/c++/v1"
+    compiler_flag: "-isystem"
+    compiler_flag: "external/clang/lib/clang/6.0.0/include"
+    compiler_flag: "-isystem"
+    compiler_flag: "/usr/include"
+    compiler_flag: "-isystem"
+    compiler_flag: "/usr/include/x86_64-linux-gnu"
+
+    linker_flag: "-fuse-ld=lld"
+    cxx_builtin_include_directory: "/usr/include"
+
+    # This overrides the default runtime_library_search_directories because the default one uses
+    # EXEC_ORIGIN which isn't supported on ubuntu 14.04 or 16.04
+    feature {
+        name: 'runtime_library_search_directories',
+        flag_set {
+            expand_if_all_available: 'runtime_library_search_directories'
+            action: 'c++-link-executable'
+            action: 'c++-link-dynamic-library'
+            action: 'c++-link-nodeps-dynamic-library'
+            flag_group {
+                iterate_over: 'runtime_library_search_directories'
+                flag_group {
+                    flag: '-Wl,-rpath,$ORIGIN/%{runtime_library_search_directories}'
+                }
+            }
+        }
+    }
+}
