@@ -6,17 +6,11 @@ language: cpp
 addons:
   apt:
     sources:
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-trusty-6.0
       - sourceline: "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8"
         key_url: "https://storage.googleapis.com/bazel-apt/doc/apt-key.pub.gpg"
     packages:
-      - clang-6.0
       - bazel
 
-before_install:
-  - export CC=clang-6.0 CXX=clang++-6.0
-
 script:
-  - bazel build ... --config=ci --verbose_failures
-  - bazel test ... --config=ci --verbose_failures
+  - bazel build ... --config=ci
+  - bazel test ... --config=ci
