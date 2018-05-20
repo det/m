@@ -16,7 +16,7 @@ filegroup(
 )
 
 filegroup(
-    name = "all",
+    name = "clang_all",
     srcs = [
         ":clang_wrappers",
         "@clang//:includes",
@@ -26,7 +26,7 @@ filegroup(
 
 cc_toolchain(
     name = "ubuntu_x86_64_clang_toolchain",
-    all_files = ":all",
+    all_files = ":clang_all",
     compiler_files = ":clang_wrappers",
     cpu = "x86_64",
     dwp_files = ":clang_wrappers",

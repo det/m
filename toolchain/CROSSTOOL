@@ -1,6 +1,6 @@
 major_version: "1"
 minor_version: "0"
-default_target_cpu: "x86_64" # Legacy, deprecated field, that hlopko@ should finally remove.
+default_target_cpu: "x86_64" # legacy field
 
 default_toolchain {
     cpu: "x86_64"
@@ -19,6 +19,7 @@ toolchain {
 
     tool_path { name: "ar"      path: "wrappers/llvm-ar.sh" }
     tool_path { name: "cpp"     path: "wrappers/clang++.sh" }
+    tool_path { name: "dwp"     path: "wrappers/llvm-dwp.sh" }
     tool_path { name: "gcc"     path: "wrappers/clang.sh" }
     tool_path { name: "gcov"    path: "wrappers/llvm-cov.sh" }
     tool_path { name: "ld"      path: "wrappers/lld.sh" }
@@ -27,30 +28,67 @@ toolchain {
     tool_path { name: "objdump" path: "wrappers/llvm-objdump.sh" }
     tool_path { name: "strip"   path: "/usr/bin/strip" }
 
+    supports_gold_linker: false
+    supports_thin_archives: true
+    supports_start_end_lib: true
+    supports_interface_shared_objects: true
     supports_embedded_runtimes: true
+    supports_incremental_linker: true
+    supports_normalizing_ar: true
+    supports_fission: true
+    needsPic: true
 
-    # unfiltered_cxx_flag: "-no-canonical-prefixes"
-    compiler_flag: "-no-canonical-prefixes"
-
+    # Do not search the standard system directories for header files. Only the directories
+    # explicitly specified below are searched.
     compiler_flag: "-nostdinc"
     compiler_flag: "-nostdinc++"
 
-    #compiler_flag: "-stdlib=libc++"
+    compiler_flag: ["-isystem", "external/clang/include/c++/v1"]
+    compiler_flag: ["-isystem", "external/clang/lib/clang/6.0.0/include"]
+    compiler_flag: ["-isystem", "/usr/include"]
+    compiler_flag: ["-isystem", "/usr/include/x86_64-linux-gnu"]
 
-    compiler_flag: "-isystem"
-    compiler_flag: "external/clang/include/c++/v1"
-    compiler_flag: "-isystem"
-    compiler_flag: "external/clang/lib/clang/6.0.0/include"
-    compiler_flag: "-isystem"
-    compiler_flag: "/usr/include"
-    compiler_flag: "-isystem"
-    compiler_flag: "/usr/include/x86_64-linux-gnu"
-
-    linker_flag: "-fuse-ld=lld"
+    # tell bazel including from this directory isn't a sandbox break
     cxx_builtin_include_directory: "/usr/include"
 
+    cxx_flag: "-std=c++17"
+    linker_flag: "-fuse-ld=lld"
+
+    # From the default bazel crosstool
+    objcopy_embed_flag: ["-I", "binary"]
+
+    # Make C++ compilation deterministic. Use linkstamping instead of these compiler symbols.
+    unfiltered_cxx_flag: "-Wno-builtin-macro-redefined"
+    unfiltered_cxx_flag: "-D__DATE__=\"redacted\""
+    unfiltered_cxx_flag: "-D__TIMESTAMP__=\"redacted\""
+    unfiltered_cxx_flag: "-D__TIME__=\"redacted\""
+
+    # Security hardening
+    compiler_flag: "-U_FORTIFY_SOURCE"
+    compiler_flag: "-D_FORTIFY_SOURCE=1"
+    compiler_flag: "-fstack-protector"
+    linker_flag: "-Wl,-z,relro,-z,now"
+
+    # Enable coloring even if there's no attached terminal. Bazel removes the escape sequences if
+    # --nocolor is specified. This isn't supported by gcc on Ubuntu 14.04.
+    compiler_flag: "-fcolor-diagnostics"
+
+    # Enable all warnings and warnings treated as errors
+    compiler_flag: "-Wall"
+    compiler_flag: "-Werror"
+
+    # Keep stack frames for debugging, even in opt mode.
+    compiler_flag: "-fno-omit-frame-pointer"
+
+    # Anticipated future default.
+    unfiltered_cxx_flag: "-no-canonical-prefixes"
+    linker_flag: "-no-canonical-prefixes"
+
+    linker_flag: "-Wl,--warn-execstack"
+    linker_flag: "-Wl,--detect-odr-violations"
+
     # This overrides the default runtime_library_search_directories because the default one uses
-    # EXEC_ORIGIN which isn't supported on ubuntu 14.04 or 16.04
+    # $EXEC_ORIGIN which isn't supported on ubuntu 14.04 or 16.04
     feature {
         name: 'runtime_library_search_directories',
         flag_set {
@@ -63,6 +101,31 @@ toolchain {
                 flag_group {
                     flag: '-Wl,-rpath,$ORIGIN/%{runtime_library_search_directories}'
                 }
+            }
+        }
+    }
+
+    feature {
+        name: 'coverage'
+        provides: 'profile'
+        flag_set {
+            action: 'preprocess-assemble'
+            action: 'c-compile'
+            action: 'c++-compile'
+            action: 'c++-header-parsing'
+            action: 'c++-header-preprocessing'
+            action: 'c++-module-compile'
+            flag_group {
+                flag: '-fprofile-instr-generate'
+                flag: '-fcoverage-mapping'
+            }
+        }
+        flag_set {
+            action: 'c++-link-dynamic-library'
+            action: 'c++-link-nodeps-dynamic-library'
+            action: 'c++-link-executable'
+            flag_group {
+                flag: '-fprofile-instr-generate'
             }
         }
     }

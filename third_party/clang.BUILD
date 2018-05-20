@@ -19,7 +19,7 @@ filegroup(
     name = "includes",
     srcs = glob([
         "include/c++/**",
-        "lib/clang/6.0.0/include/**"
+        "lib/clang/6.0.0/include/**",
     ]),
 )
 
