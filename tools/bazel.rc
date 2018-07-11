@@ -1,0 +1,48 @@
+build --cpu x86_64
+build --host_cpu x86_64
+build --crosstool_top //toolchain:cc-toolchain
+
+build:debug_unoptimized --strip never
+build:debug_unoptimized --copt -g
+build:debug_unoptimized --copt -O0
+build:debug_unoptimized --copt -fno-omit-frame-pointer
+
+build:debug --strip never
+build:debug --copt -g
+build:debug --copt -Og
+build:debug --copt -fno-omit-frame-pointer
+
+build:debug_optimized --strip never
+build:debug_optimized --copt -g
+build:debug_optimized --copt -O2
+build:debug_optimized --copt -fno-omit-frame-pointer
+
+build:release --strip always
+build:release --copt -g0
+build:release --copt -O2
+build:release --copt -DNDEBUG
+build:release --copt -ffunction-sections
+build:release --copt -fdata-sections
+build:release --copt -flto=thin
+build:release --linkopt -flto=thin
+build:release --linkopt -Wl,--gc-sections
+
+build:asan --copt -fsanitize=address
+build:asan --linkopt -fsanitize=address
+
+build:lsan --copt -fsanitize=leak
+build:lsan --linkopt -fsanitize=leak
+
+build:msan --copt -fsanitize=memory
+build:msan --linkopt -fsanitize=memory
+
+build:tsan --copt -fsanitize=thread
+build:tsan --linkopt -fsanitize=thread
+
+build:ubsan --copt -fsanitize=undefined
+build:ubsan --linkopt -fsanitize=undefined
+
+build:ci --config=debug
+build:ci --config=asan
+
+test --test_output errors

@@ -1,6 +1,6 @@
 major_version: "1"
 minor_version: "0"
-default_target_cpu: "x86_64" # legacy field
+default_target_cpu: "x86_64"
 
 default_toolchain {
     cpu: "x86_64"
@@ -12,10 +12,10 @@ toolchain {
     host_system_name:     "x86_64-unknown-linux-gnu"
     target_system_name:   "x86_64-unknown-linux-gnu"
     target_cpu:           "x86_64"
-    target_libc:          "GLIBC_2.14"
+    target_libc:          "GLIBC_2.19"
     compiler:             "clang"
-    abi_version:          "clang6.0"
-    abi_libc_version:     "GLIBC_2.14"
+    abi_version:          "clang-6.0"
+    abi_libc_version:     "GLIBC_2.19"
 
     tool_path { name: "ar"      path: "wrappers/llvm-ar.sh" }
     tool_path { name: "cpp"     path: "wrappers/clang++.sh" }
@@ -43,10 +43,10 @@ toolchain {
     compiler_flag: "-nostdinc"
     compiler_flag: "-nostdinc++"
 
-    compiler_flag: ["-isystem", "external/clang/include/c++/v1"]
-    compiler_flag: ["-isystem", "external/clang/lib/clang/6.0.0/include"]
-    compiler_flag: ["-isystem", "/usr/include"]
-    compiler_flag: ["-isystem", "/usr/include/x86_64-linux-gnu"]
+    compiler_flag: ["-idirafter", "external/clang/include/c++/v1"]
+    compiler_flag: ["-idirafter", "external/clang/lib/clang/6.0.1/include"]
+    compiler_flag: ["-idirafter", "/usr/include"]
+    compiler_flag: ["-idirafter", "/usr/include/x86_64-linux-gnu"]
 
     # tell bazel including from this directory isn't a sandbox break
     cxx_builtin_include_directory: "/usr/include"
@@ -101,31 +101,6 @@ toolchain {
                 flag_group {
                     flag: '-Wl,-rpath,$ORIGIN/%{runtime_library_search_directories}'
                 }
-            }
-        }
-    }
-
-    feature {
-        name: 'coverage'
-        provides: 'profile'
-        flag_set {
-            action: 'preprocess-assemble'
-            action: 'c-compile'
-            action: 'c++-compile'
-            action: 'c++-header-parsing'
-            action: 'c++-header-preprocessing'
-            action: 'c++-module-compile'
-            flag_group {
-                flag: '-fprofile-instr-generate'
-                flag: '-fcoverage-mapping'
-            }
-        }
-        flag_set {
-            action: 'c++-link-dynamic-library'
-            action: 'c++-link-nodeps-dynamic-library'
-            action: 'c++-link-executable'
-            flag_group {
-                flag: '-fprofile-instr-generate'
             }
         }
     }

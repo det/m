@@ -3,9 +3,9 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 http_archive(
     name = "clang",
     build_file = "//:third_party/clang.BUILD",
-    sha256 = "114e78b2f6db61aaee314c572e07b0d635f653adc5d31bd1cd0bf31a3db4a6e5",
-    strip_prefix = "clang+llvm-6.0.0-x86_64-linux-gnu-ubuntu-14.04",
-    url = "http://releases.llvm.org/6.0.0/clang+llvm-6.0.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz",
+    sha256 = "fa5416553ca94a8c071a27134c094a5fb736fe1bd0ecc5ef2d9bc02754e1bef0",
+    strip_prefix = "clang+llvm-6.0.1-x86_64-linux-gnu-ubuntu-14.04",
+    url = "http://releases.llvm.org/6.0.1/clang+llvm-6.0.1-x86_64-linux-gnu-ubuntu-14.04.tar.xz",
 )
 
 http_archive(
@@ -25,7 +25,7 @@ http_archive(
 http_archive(
     name = "fmt",
     build_file = "//:third_party/fmt.BUILD",
-    sha256 = "47e17eff058ed52bbe9fd1bd732401e1e542aa818743e17b7c9ea37f39443b8a",
-    strip_prefix = "fmt-838400d29b95a02df8a4ea4a722c33aef135afd3",
-    url = "https://github.com/fmtlib/fmt/archive/838400d29b95a02df8a4ea4a722c33aef135afd3.tar.gz",
+    sha256 = "73d4cab4fa8a3482643d8703de4d9522d7a56981c938eca42d929106ff474b44",
+    strip_prefix = "fmt-5.1.0",
+    url = "https://github.com/fmtlib/fmt/archive/5.1.0.tar.gz",
 )

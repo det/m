@@ -1,6 +1,3 @@
-# toolchain/BUILD
-package(default_visibility = ['//visibility:public'])
-
 cc_toolchain_suite(
     name = "cc-toolchain",
     toolchains = {
@@ -11,14 +8,14 @@ cc_toolchain_suite(
 filegroup(name = "empty")
 
 filegroup(
-    name = "clang_wrappers",
-    srcs = ["@clang//:binaries"] + glob(["wrappers/*.sh"]),
+    name = "clang_wrapper",
+    srcs = glob(["wrappers/*.sh"]) + ["@clang//:binaries", "@clang//:sanitizer_libs"],
 )
 
 filegroup(
     name = "clang_all",
     srcs = [
-        ":clang_wrappers",
+        ":clang_wrapper",
         "@clang//:includes",
         "@clang//:runtime_libs",
     ],
@@ -27,13 +24,14 @@ filegroup(
 cc_toolchain(
     name = "ubuntu_x86_64_clang_toolchain",
     all_files = ":clang_all",
-    compiler_files = ":clang_wrappers",
+    compiler_files = ":clang_wrapper",
     cpu = "x86_64",
-    dwp_files = ":clang_wrappers",
+    dwp_files = ":clang_wrapper",
     dynamic_runtime_libs = ["@clang//:runtime_libs"],
-    linker_files = ":clang_wrappers",
-    objcopy_files = ":clang_wrappers",
+    linker_files = ":clang_wrapper",
+    objcopy_files = ":clang_wrapper",
     static_runtime_libs = [":empty"],
-    strip_files = ":empty",
-    supports_param_files = 1,
+    strip_files = ":clang_wrapper",
+    supports_param_files = True,
+    visibility = ["//visibility:public"],
 )

@@ -1,5 +1,5 @@
 cc_test(
-    name = "test",
+    name = "tests",
     size = "small",
     srcs = glob(["*.cpp"]),
     data = ["LoremIpsum.txt"],

@@ -1,5 +1,3 @@
-package(default_visibility = ['//visibility:public'])
-
 filegroup(
     name = "binaries",
     srcs = [
@@ -8,19 +6,27 @@ filegroup(
         "bin/llvm-dwp",
         "bin/llvm-objcopy",
         "bin/llvm-objdump",
-        "bin/lld",
+        "bin/ld.lld",
         "bin/llvm-ar",
         "bin/llvm-nm",
         "bin/llvm-cov"
     ],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "sanitizer_libs",
+    srcs = glob(["lib/clang/6.0.1/lib/linux/*.a"]),
+    visibility = ["//visibility:public"],
 )
 
 filegroup(
     name = "includes",
     srcs = glob([
         "include/c++/**",
-        "lib/clang/6.0.0/include/**",
+        "lib/clang/6.0.1/include/**",
     ]),
+    visibility = ["//visibility:public"],
 )
 
 filegroup(
@@ -29,4 +35,5 @@ filegroup(
         "lib/libc++.so.1",
         "lib/libc++abi.so.1",
     ],
+    visibility = ["//visibility:public"],
 )
