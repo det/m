@@ -29,3 +29,18 @@ http_archive(
     strip_prefix = "fmt-5.1.0",
     url = "https://github.com/fmtlib/fmt/archive/5.1.0.tar.gz",
 )
+
+http_archive(
+    name = "date",
+    build_file = "//:third_party/date.BUILD",
+    sha256 = "98907d243397483bd7ad889bf6c66746db0d7d2a39cc9aacc041834c40b65b98",
+    strip_prefix = "date-2.4.1",
+    url = "https://github.com/HowardHinnant/date/archive/v2.4.1.tar.gz",
+)
+
+http_archive(
+    name = "tzdata",
+    build_file = "//:third_party/tzdata.BUILD",
+    sha256 = "6b288e5926841a4cb490909fe822d85c36ae75538ad69baf20da9628b63b692e",
+    url = "https://data.iana.org/time-zones/releases/tzdata2018e.tar.gz",
+)
