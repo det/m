@@ -1,5 +1,3 @@
-CLANG_VERSION = "6.0.1"
-
 filegroup(
     name = "binaries",
     srcs = [
@@ -18,7 +16,7 @@ filegroup(
 
 filegroup(
     name = "sanitizer_libs",
-    srcs = glob(["lib/clang/" + CLANG_VERSION + "/lib/linux/*.a"]),
+    srcs = glob(["lib/clang/6.0.1/lib/linux/*.a"]),
     visibility = ["//visibility:public"],
 )
 
@@ -26,7 +24,7 @@ filegroup(
     name = "includes",
     srcs = glob([
         "include/c++/**",
-        "lib/clang/" + CLANG_VERSION + "/include/**",
+        "lib/clang/6.0.1/include/**",
     ]),
     visibility = ["//visibility:public"],
 )
