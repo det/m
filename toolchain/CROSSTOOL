@@ -54,6 +54,8 @@ toolchain {
     cxx_flag: "-std=c++17"
     linker_flag: "-fuse-ld=lld"
 
+    linker_flag: "-lm"
+
     # From the default bazel crosstool
     objcopy_embed_flag: ["-I", "binary"]
 
@@ -77,13 +79,11 @@ toolchain {
     compiler_flag: "-Wall"
     compiler_flag: "-Werror"
 
-    # Keep stack frames for debugging, even in opt mode.
-    compiler_flag: "-fno-omit-frame-pointer"
-
     # Anticipated future default.
     unfiltered_cxx_flag: "-no-canonical-prefixes"
     linker_flag: "-no-canonical-prefixes"
 
+    # Linker warnings
     linker_flag: "-Wl,--warn-execstack"
     linker_flag: "-Wl,--detect-odr-violations"
 

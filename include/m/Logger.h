@@ -1,9 +1,11 @@
 #pragma once
+#include "m/SpinLock.h"
 #include "fmt/format.h"
 #include "fmt/time.h"
 #include <chrono>
 #include <ctime>
 #include <cstdio>
+#include <memory>
 #include <string>
 
 namespace m {
@@ -31,7 +33,12 @@ namespace m {
         std::chrono::system_clock::time_point time = std::chrono::system_clock::now();
     };
 
-    class Logger {
+    struct LoggerInterface {
+        virtual ~LoggerInterface() {}
+        virtual void log(LogMessage message) = 0;
+    };
+
+    class DefaultLogger : public LoggerInterface {
     public:
         virtual void log(LogMessage message) {
             auto d = message.time.time_since_epoch();
@@ -46,6 +53,8 @@ namespace m {
                                message.line,
                                message.text);
 
+            auto lock = std::lock_guard(spin_lock_);
+
             if (message.level != LogLevel::error)
                 std::fwrite(s.c_str(), 1, s.size(), stdout);
             else {
@@ -54,23 +63,31 @@ namespace m {
                 std::fflush(stderr);
             }
         }
+
+    private:
+        SpinLock spin_lock_;
     };
 
-    inline Logger& getGlobalLogger() {
-        static Logger instance;
-        return instance;
+    namespace detail {
+        inline std::unique_ptr<LoggerInterface>& getGlobalLogger() {
+            static std::unique_ptr<LoggerInterface> logger = std::make_unique<DefaultLogger>();
+            return logger;
+        }
     }
 
-    template <typename... Args>
-    void log(LogLevel level, const char* file, unsigned int line, const char* f, Args&&... args) {
-        getGlobalLogger().log({level, file, line, fmt::format(f, std::forward<Args>(args)...)});
+    inline LoggerInterface& getGlobalLogger() {
+        return *detail::getGlobalLogger();
     }
 
-    #define M_LOG(LEVEL, ...)  ::m::log(LEVEL,                  __FILE__, __LINE__, __VA_ARGS__)
-    #define M_LOG_DEBUG(...)   ::m::log(::m::LogLevel::debug,   __FILE__, __LINE__, __VA_ARGS__)
-    #define M_LOG_INFO(...)    ::m::log(::m::LogLevel::info,    __FILE__, __LINE__, __VA_ARGS__)
-    #define M_LOG_WARNING(...) ::m::log(::m::LogLevel::warning, __FILE__, __LINE__, __VA_ARGS__)
-    #define M_LOG_ERROR(...)   ::m::log(::m::LogLevel::error,   __FILE__, __LINE__, __VA_ARGS__)
+    inline void setGlobalLogger(std::unique_ptr<LoggerInterface> logger) {
+        detail::getGlobalLogger() = std::move(logger);
+    }
+
+    #define M_LOG(LEVEL, ...)  ::m::getGlobalLogger().log({LEVEL, __FILE__, __LINE__, fmt::format(__VA_ARGS__)})
+    #define M_LOG_DEBUG(...)   M_LOG(::m::LogLevel::debug,  __VA_ARGS__)
+    #define M_LOG_INFO(...)    M_LOG(::m::LogLevel::info,   __VA_ARGS__)
+    #define M_LOG_WARNING(...) M_LOG(::m::LogLevel::warning,__VA_ARGS__)
+    #define M_LOG_ERROR(...)   M_LOG(::m::LogLevel::error,  __VA_ARGS__)
 
     #define M_LOG_RATE_LIMITED(LEVEL, INTERVAL, ...)                                                                \
     do {                                                                                                            \
@@ -85,7 +102,4 @@ namespace m {
     #define M_LOG_RATE_LIMITED_INFO(INTERVAL, ...)    M_LOG_RATE_LIMITED(::m::LogLevel::info,    INTERVAL, __VA_ARGS__)
     #define M_LOG_RATE_LIMITED_WARNING(INTERVAL, ...) M_LOG_RATE_LIMITED(::m::LogLevel::warning, INTERVAL, __VA_ARGS__)
     #define M_LOG_RATE_LIMITED_ERROR(INTERVAL, ...)   M_LOG_RATE_LIMITED(::m::LogLevel::error,   INTERVAL, __VA_ARGS__)
-
-    // set log level
-    // get log level
 }
