@@ -2,7 +2,7 @@
 
 set -eu
 
-bazel_url=https://github.com/bazelbuild/bazel/releases/download/0.15.2/bazel-0.15.2-installer-linux-x86_64.sh
+bazel_installer_url=https://github.com/bazelbuild/bazel/releases/download/0.15.2/bazel-0.15.2-installer-linux-x86_64.sh
 
 script_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 bazel_install_dir="$script_path/.bazel"
@@ -17,7 +17,7 @@ if [[ $(< "$bazel_sha256_file") != "$bazel_desired_sha256" ]]; then
 
     # Download bazel installer
     bazel_installer="$bazel_install_dir/bazel-installer.sh"
-    wget $bazel_url -O "$bazel_installer"
+    wget $bazel_installer_url -O "$bazel_installer"
 
     # Install bazel
     chmod +x "$bazel_installer"
@@ -30,4 +30,4 @@ if [[ $(< "$bazel_sha256_file") != "$bazel_desired_sha256" ]]; then
     sha256sum "$bazel_real" | awk '{ print $1; }' > "$bazel_sha256_file"
 fi
 
-exec -a "$0" "$bazel_real" "$@"
+exec "$bazel_real" "$@"
