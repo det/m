@@ -38,23 +38,22 @@ toolchain {
     supports_fission: true
     needsPic: true
 
-    # Do not search the standard system directories for header files. Only the directories
-    # explicitly specified below are searched.
-    compiler_flag: "-nostdinc"
-    compiler_flag: "-nostdinc++"
-
-    compiler_flag: ["-idirafter", "external/clang/include/c++/v1"]
-    compiler_flag: ["-idirafter", "external/clang/lib/clang/6.0.1/include"]
-    compiler_flag: ["-idirafter", "/usr/include"]
-    compiler_flag: ["-idirafter", "/usr/include/x86_64-linux-gnu"]
-
-    # tell bazel including from this directory isn't a sandbox break
+    # tell bazel including from these directories isn't a sandbox break
+    cxx_builtin_include_directory: "%package(@clang//)%/include/c++/v1"
+    cxx_builtin_include_directory: "%package(@clang//)%/lib/clang/6.0.1/include"
     cxx_builtin_include_directory: "/usr/include"
 
     cxx_flag: "-std=c++17"
-    linker_flag: "-fuse-ld=lld"
+    cxx_flag: "-stdlib=libc++"
+    cxx_flag: "-DLIBCXX_USE_COMPILER_RT=YES"
+    cxx_flag: "-DLIBCXXABI_USE_COMPILER_RT=YES"
+    cxx_flag: "-DLIBCXXABI_USE_LLVM_UNWINDER=YES"
 
+    linker_flag: "-fuse-ld=lld"
+    linker_flag: "-rtlib=compiler-rt"
     linker_flag: "-lm"
+    linker_flag: "-lpthread"
+    linker_flag: "-ldl"
 
     # From the default bazel crosstool
     objcopy_embed_flag: ["-I", "binary"]
@@ -86,6 +85,30 @@ toolchain {
     # Linker warnings
     linker_flag: "-Wl,--warn-execstack"
     linker_flag: "-Wl,--detect-odr-violations"
+
+    # Default compilation mode
+    compilation_mode_flags {
+        mode: FASTBUILD
+        compiler_flag: "-g"
+        compiler_flag: "-Og"
+    }
+
+    compilation_mode_flags {
+        mode: DBG
+        compiler_flag: "-g"
+        compiler_flag: "-O0"
+    }
+
+    compilation_mode_flags {
+        mode: OPT
+        compiler_flag: "-O2"
+        compiler_flag: "-DNDEBUG"
+        compiler_flag: "-ffunction-sections"
+        compiler_flag: "-fdata-sections"
+        compiler_flag: "-flto=thin"
+        linker_flag: "-flto=thin"
+        linker_flag: "-Wl,--gc-sections"
+    }
 
     # This overrides the default runtime_library_search_directories because the default one uses
     # $EXEC_ORIGIN which isn't supported on ubuntu 14.04 or 16.04

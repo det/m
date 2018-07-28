@@ -9,13 +9,13 @@ filegroup(
         "bin/ld.lld",
         "bin/llvm-ar",
         "bin/llvm-nm",
-        "bin/llvm-cov"
+        "bin/llvm-cov",
     ],
     visibility = ["//visibility:public"],
 )
 
 filegroup(
-    name = "sanitizer_libs",
+    name = "compiler_rt_libs",
     srcs = glob(["lib/clang/6.0.1/lib/linux/*.a"]),
     visibility = ["//visibility:public"],
 )
@@ -34,6 +34,17 @@ filegroup(
     srcs = [
         "lib/libc++.so.1",
         "lib/libc++abi.so.1",
+        "lib/libunwind.so.1",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "static_libs",
+    srcs = [
+        "lib/libc++.a",
+        "lib/libc++abi.a",
+        "lib/libunwind.a",
     ],
     visibility = ["//visibility:public"],
 )

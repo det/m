@@ -85,10 +85,10 @@ namespace m {
     }
 
     #define M_LOG(LEVEL, ...)  ::m::getGlobalLogger().log({LEVEL, __FILE__, __LINE__, fmt::format(__VA_ARGS__)})
-    #define M_LOG_DEBUG(...)   M_LOG(::m::LogLevel::debug,  __VA_ARGS__)
-    #define M_LOG_INFO(...)    M_LOG(::m::LogLevel::info,   __VA_ARGS__)
-    #define M_LOG_WARNING(...) M_LOG(::m::LogLevel::warning,__VA_ARGS__)
-    #define M_LOG_ERROR(...)   M_LOG(::m::LogLevel::error,  __VA_ARGS__)
+    #define M_LOG_DEBUG(...)   M_LOG(::m::LogLevel::debug,   __VA_ARGS__)
+    #define M_LOG_INFO(...)    M_LOG(::m::LogLevel::info,    __VA_ARGS__)
+    #define M_LOG_WARNING(...) M_LOG(::m::LogLevel::warning, __VA_ARGS__)
+    #define M_LOG_ERROR(...)   M_LOG(::m::LogLevel::error,   __VA_ARGS__)
 
     #define M_LOG_RATE_LIMITED(LEVEL, INTERVAL, ...)                                                                \
     do {                                                                                                            \

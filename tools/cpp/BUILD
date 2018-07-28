@@ -1,7 +1,7 @@
 cc_toolchain_suite(
     name = "cc-toolchain",
     toolchains = {
-         "x86_64|clang": ":ubuntu_x86_64_clang_toolchain",
+        "x86_64|clang": ":ubuntu_x86_64_clang_toolchain",
     },
 )
 
@@ -9,7 +9,10 @@ filegroup(name = "empty")
 
 filegroup(
     name = "clang_wrapper",
-    srcs = glob(["wrappers/*.sh"]) + ["@clang//:binaries", "@clang//:sanitizer_libs"],
+    srcs = glob(["wrappers/*.sh"]) + [
+        "@clang//:binaries",
+        "@clang//:compiler_rt_libs",
+    ],
 )
 
 filegroup(
@@ -30,7 +33,7 @@ cc_toolchain(
     dynamic_runtime_libs = ["@clang//:runtime_libs"],
     linker_files = ":clang_wrapper",
     objcopy_files = ":clang_wrapper",
-    static_runtime_libs = [":empty"],
+    static_runtime_libs = ["@clang//:static_libs"],
     strip_files = ":clang_wrapper",
     supports_param_files = True,
     visibility = ["//visibility:public"],
