@@ -1,17 +1,4 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-
-# Bazel symlinks & user config file
+# Bazel symlinks, user config file, hermetic bazel install
 /bazel-*
 .bazelrc
+/tools/.bazel

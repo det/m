@@ -1,0 +1,33 @@
+#! /bin/bash
+
+set -eu
+
+bazel_url=https://github.com/bazelbuild/bazel/releases/download/0.15.2/bazel-0.15.2-installer-linux-x86_64.sh
+
+script_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+bazel_install_dir="$script_path/.bazel"
+bazel_real="$bazel_install_dir/lib/bazel/bin/bazel-real"
+bazel_desired_sha256=3e18f78e194acc5d05968a0c1d7708bd6fb6b99a2bcc1a3cd46e642f51d0a277
+bazel_sha256_file="$bazel_install_dir/bazel.sha256"
+
+if [[ $(< "$bazel_sha256_file") != "$bazel_desired_sha256" ]]; then
+    # Setup .bazel directory
+    rm -rf "$bazel_install_dir"
+    mkdir "$bazel_install_dir"
+
+    # Download bazel installer
+    bazel_installer="$bazel_install_dir/bazel-installer.sh"
+    wget $bazel_url -O "$bazel_installer"
+
+    # Install bazel
+    chmod +x "$bazel_installer"
+    $bazel_installer --prefix="$bazel_install_dir"
+
+    # Delete bazel installer
+    rm -f "$bazel_installer"
+
+    # Update the sha256 of bazel-real
+    sha256sum "$bazel_real" | awk '{ print $1; }' > "$bazel_sha256_file"
+fi
+
+exec -a "$0" "$bazel_real" "$@"
