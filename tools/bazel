@@ -9,7 +9,7 @@ install_dir="${HOME}/.cache/bazel-install/${installer_sha256}"
 bazel_real="${install_dir}/lib/bazel/bin/bazel-real"
 
 if [[ ! -f "${bazel_real}" ]]; then
-    function print_info() { printf "\033[0;32mINFO:\033[0m $*\n"; }
+    print_info() { printf "\033[0;32mINFO:\033[0m $*\n"; }
     print_info "Bazel installation not found, installing..."
 
     # Setup install directory
@@ -21,12 +21,13 @@ if [[ ! -f "${bazel_real}" ]]; then
     # Download bazel installer
     bazel_installer="${install_dir}/bazel-installer.sh"
     wget "${installer_url}" -O "${bazel_installer}"
-    echo "${installer_sha256}  ${bazel_installer}" | sha256sum --check
+    echo "${installer_sha256}  ${bazel_installer}" | shasum -a 256 --check
 
     # Install bazel
     chmod +x "${bazel_installer}"
     "${bazel_installer}" --prefix="${install_dir}"
     rm -f "${bazel_installer}"
+
     print_info "Bazel installation complete."
 fi
 
