@@ -15,7 +15,7 @@ filegroup(
 )
 
 filegroup(
-    name = "compiler_rt_libs",
+    name = "clang_libs",
     srcs = glob(["lib/clang/6.0.1/lib/linux/*.a"]),
     visibility = ["//visibility:public"],
 )

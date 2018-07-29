@@ -11,7 +11,7 @@ filegroup(
     name = "clang_wrapper",
     srcs = glob(["wrappers/*.sh"]) + [
         "@clang//:binaries",
-        "@clang//:compiler_rt_libs",
+        "@clang//:clang_libs",
     ],
 )
 
