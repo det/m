@@ -21,7 +21,7 @@ if [[ $(< "${sha256_file}") != "${installer_sha256}" ]]; then
     bazel_installer="${install_dir}/bazel-installer.sh"
     trap 'rm -f "${bazel_installer}"' EXIT # Delete bazel installer on exit
     wget $installer_url -O "${bazel_installer}"
-    echo "${installer_sha256}  ${bazel_installer}" | shasum -a 256 --check
+    echo "${installer_sha256}  ${bazel_installer}" | sha256sum --check
 
     # Update bazel.sha256 (Note: this must be done before the installer is run
     # because the installer will recursively call this script so doing this
