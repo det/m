@@ -9,7 +9,7 @@ install_dir="${script_dir}/.bazel"
 bazel_real="${install_dir}/lib/bazel/bin/bazel-real"
 sha256_file="${install_dir}/bazel.sha256"
 
-if [[ $(< "${sha256_file}") != "${installer_sha256}" ]]; then
+if [[ ! -f "${sha256_file}" || $(< "${sha256_file}") != "${installer_sha256}" ]]; then
     # Setup .bazel directory
     rm -rf "${install_dir}"
     mkdir "${install_dir}"
@@ -20,12 +20,11 @@ if [[ $(< "${sha256_file}") != "${installer_sha256}" ]]; then
     # Download bazel installer
     bazel_installer="${install_dir}/bazel-installer.sh"
     trap 'rm -f "${bazel_installer}"' EXIT # Delete bazel installer on exit
-    wget $installer_url -O "${bazel_installer}"
-    echo "${installer_sha256}  ${bazel_installer}" | sha256sum --check
+    wget "${installer_url}" -O "${bazel_installer}"
+    echo "${installer_sha256}  ${bazel_installer}" | shasum -a 256 --check
 
     # Update bazel.sha256 (Note: this must be done before the installer is run
-    # because the installer will recursively call this script so doing this
-    # here prevents infinite recursion)
+    # to prevent infinite recursion)
     echo "${installer_sha256}" > "${sha256_file}"
 
     # Install bazel
