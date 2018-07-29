@@ -17,15 +17,13 @@ if [[ $(< "${sha256_file}") != "${desired_sha256}" ]]; then
 
     # Download bazel installer
     bazel_installer="${install_dir}/bazel-installer.sh"
+    trap "rm -f ${bazel_installer}" EXIT # Delete bazel installer on exit
     wget $installer_url -O "${bazel_installer}"
     echo "${installer_sha256} ${bazel_installer}" | sha256sum --check
 
     # Install bazel
     chmod +x "${bazel_installer}"
     ${bazel_installer} --prefix="${install_dir}"
-
-    # Delete bazel installer
-    rm -f "${bazel_installer}"
 
     # Update the sha256 of bazel-real
     sha256sum "${bazel_real}" | awk '{ print $1; }' > "${sha256_file}"
