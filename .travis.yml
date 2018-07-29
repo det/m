@@ -4,5 +4,5 @@ sudo: required
 language: cpp
 
 script:
-  - tools/bazel build ... --config=ci
-  - tools/bazel test ... --config=ci
+  - ./tools/bazel build ... --config=ci
+  - ./tools/bazel test ... --config=ci

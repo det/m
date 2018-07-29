@@ -4,8 +4,8 @@ set -euo pipefail
 installer_url=https://github.com/bazelbuild/bazel/releases/download/0.15.2/bazel-0.15.2-installer-linux-x86_64.sh
 installer_sha256=13eae0f09565cf17fc1c9ce1053b9eac14c11e726a2215a79ebaf5bdbf435241
 
-script_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-install_dir="${script_path}/.bazel"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+install_dir="${script_dir}/.bazel"
 bazel_real="${install_dir}/lib/bazel/bin/bazel-real"
 desired_sha256=3e18f78e194acc5d05968a0c1d7708bd6fb6b99a2bcc1a3cd46e642f51d0a277
 sha256_file="${install_dir}/bazel.sha256"
@@ -15,9 +15,12 @@ if [[ $(< "${sha256_file}") != "${desired_sha256}" ]]; then
     rm -rf "${install_dir}"
     mkdir "${install_dir}"
 
+    # Delete .bazel on failure
+    trap 'rm -rf "${install_dir}"' ERR INT TERM
+
     # Download bazel installer
     bazel_installer="${install_dir}/bazel-installer.sh"
-    trap "rm -f ${bazel_installer}" EXIT # Delete bazel installer on exit
+    trap 'rm -f "${bazel_installer}"' EXIT # Delete bazel installer on exit
     wget $installer_url -O "${bazel_installer}"
     echo "${installer_sha256} ${bazel_installer}" | sha256sum --check
 
