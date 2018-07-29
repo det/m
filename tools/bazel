@@ -1,33 +1,34 @@
 #! /bin/bash
+set -euo pipefail
 
-set -eu
-
-bazel_installer_url=https://github.com/bazelbuild/bazel/releases/download/0.15.2/bazel-0.15.2-installer-linux-x86_64.sh
+installer_url=https://github.com/bazelbuild/bazel/releases/download/0.15.2/bazel-0.15.2-installer-linux-x86_64.sh
+installer_sha256=13eae0f09565cf17fc1c9ce1053b9eac14c11e726a2215a79ebaf5bdbf435241
 
 script_path="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-bazel_install_dir="$script_path/.bazel"
-bazel_real="$bazel_install_dir/lib/bazel/bin/bazel-real"
-bazel_desired_sha256=3e18f78e194acc5d05968a0c1d7708bd6fb6b99a2bcc1a3cd46e642f51d0a277
-bazel_sha256_file="$bazel_install_dir/bazel.sha256"
+install_dir="${script_path}/.bazel"
+bazel_real="${install_dir}/lib/bazel/bin/bazel-real"
+desired_sha256=3e18f78e194acc5d05968a0c1d7708bd6fb6b99a2bcc1a3cd46e642f51d0a277
+sha256_file="${install_dir}/bazel.sha256"
 
-if [[ $(< "$bazel_sha256_file") != "$bazel_desired_sha256" ]]; then
+if [[ $(< "${sha256_file}") != "${desired_sha256}" ]]; then
     # Setup .bazel directory
-    rm -rf "$bazel_install_dir"
-    mkdir "$bazel_install_dir"
+    rm -rf "${install_dir}"
+    mkdir "${install_dir}"
 
     # Download bazel installer
-    bazel_installer="$bazel_install_dir/bazel-installer.sh"
-    wget $bazel_installer_url -O "$bazel_installer"
+    bazel_installer="${install_dir}/bazel-installer.sh"
+    wget $installer_url -O "${bazel_installer}"
+    echo "${installer_sha256} ${bazel_installer}" | sha256sum --check
 
     # Install bazel
-    chmod +x "$bazel_installer"
-    $bazel_installer --prefix="$bazel_install_dir"
+    chmod +x "${bazel_installer}"
+    ${bazel_installer} --prefix="${install_dir}"
 
     # Delete bazel installer
-    rm -f "$bazel_installer"
+    rm -f "${bazel_installer}"
 
     # Update the sha256 of bazel-real
-    sha256sum "$bazel_real" | awk '{ print $1; }' > "$bazel_sha256_file"
+    sha256sum "${bazel_real}" | awk '{ print $1; }' > "${sha256_file}"
 fi
 
-exec "$bazel_real" "$@"
+exec -a "$0" "${bazel_real}" "$@"
