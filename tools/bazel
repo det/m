@@ -5,32 +5,29 @@ installer_url=https://github.com/bazelbuild/bazel/releases/download/0.15.2/bazel
 installer_sha256=13eae0f09565cf17fc1c9ce1053b9eac14c11e726a2215a79ebaf5bdbf435241
 
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-install_dir="${script_dir}/.bazel"
+install_dir="${HOME}/.cache/bazel-install/${installer_sha256}"
 bazel_real="${install_dir}/lib/bazel/bin/bazel-real"
-sha256_file="${install_dir}/bazel.sha256"
 
-if [[ $(< "${sha256_file}") != "${installer_sha256}" ]]; then
-    # Setup .bazel directory
-    rm -rf "${install_dir}"
-    mkdir "${install_dir}"
+if [[ ! -f "${bazel_real}" ]]; then
+    function print_info() { printf "\033[0;32mINFO:\033[0m $*\n"; }
+    print_info "Bazel installation not found, installing..."
+
+    # Setup install directory
+    mkdir -p "${install_dir}"
 
     # Delete .bazel on failure
     trap 'rm -rf "${install_dir}"' ERR INT TERM
 
     # Download bazel installer
     bazel_installer="${install_dir}/bazel-installer.sh"
-    trap 'rm -f "${bazel_installer}"' EXIT # Delete bazel installer on exit
-    wget $installer_url -O "${bazel_installer}"
+    wget "${installer_url}" -O "${bazel_installer}"
     echo "${installer_sha256}  ${bazel_installer}" | sha256sum --check
-
-    # Update bazel.sha256 (Note: this must be done before the installer is run
-    # because the installer will recursively call this script so doing this
-    # here prevents infinite recursion)
-    echo "${installer_sha256}" > "${sha256_file}"
 
     # Install bazel
     chmod +x "${bazel_installer}"
-    ${bazel_installer} --prefix="${install_dir}"
+    "${bazel_installer}" --prefix="${install_dir}"
+    rm -f "${bazel_installer}"
+    print_info "Bazel installation complete."
 fi
 
 exec -a "$0" "${bazel_real}" "$@"
